@@ -36,7 +36,7 @@ namespace GameOfLife
                 ///for each generation you need to press any key
                 while (input.Key != ConsoleKey.Escape)
                 {
-                    input = Console.ReadKey(true);
+                    input = Console.ReadKey(true);  
                     game.Calculate();
                     Console.Clear();
                     game.Print();

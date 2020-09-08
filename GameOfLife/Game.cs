@@ -11,7 +11,7 @@ namespace GameOfLife
         public int Rows;
         public int Columns;
         public Cell[,] Grid;
-        public int GenerationCount;
+        int GenerationCount=0;
 
         public Game(int rows, int columns)
         {
@@ -26,9 +26,10 @@ namespace GameOfLife
             Dead,
             Alive,
         }
-
+       
         public void RandomFill()
         {
+            
             for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
@@ -40,8 +41,12 @@ namespace GameOfLife
            
         }
 
+       
+
+
         public void Calculate()
         {
+            //GenerationCount++;
             var nextGeneration = new Cell[Rows, Columns];
             // Loop through every cell 
             for (var row = 1; row < Rows - 1; row++)
@@ -91,7 +96,7 @@ namespace GameOfLife
                 }
             }
             Grid = nextGeneration;
-           
+            //Console.WriteLine("Generations: {0}", GenerationCount);
         }
 
         // Count the number of alive cells
@@ -114,6 +119,7 @@ namespace GameOfLife
         /// Prints the game to the console.
         public void Print(int timeout = 1000)
         {
+            GenerationCount++;
             var stringBuilder = new StringBuilder();
 
             for (var row = 0; row < Rows; row++)
@@ -131,7 +137,7 @@ namespace GameOfLife
                 Console.CursorVisible = false;
                 Console.SetCursorPosition(0, 0);
                 Console.Write(stringBuilder.ToString());
-                // Console.WriteLine("Generations: {0}", GenerationCount);
+                Console.WriteLine("Generations: {0}", GenerationCount);
                 Thread.Sleep(timeout);
 
             }
