@@ -12,26 +12,23 @@ namespace GameOfLife
             {
                 int rows;
                 Console.WriteLine("Rows : ");
-                while (!int.TryParse(Console.ReadLine(), out rows))
+                while (!int.TryParse(Console.ReadLine(), out rows) || rows< 0)
                 {
 
                     Console.WriteLine("This is not a valid input. Enter an integer > 0");
 
                 }
-                // if (rows < 0)
-
+                
                 int columns;
                 Console.WriteLine("Columns : ");
-                while (!int.TryParse(Console.ReadLine(), out columns))
+                while (!int.TryParse(Console.ReadLine(), out columns) || columns < 0)
                 {
                     Console.WriteLine("This is not a valid input. Enter an integer > 0");
                 }
-               /* while (columns < 0)
-                {
-                    Console.WriteLine("This is not a valid input. Enter an integer > 0");
-                }*/
-                Console.WriteLine("To quit the game, press Esc : ");
+                
                 Console.WriteLine("To coninue the game, press any key : ");
+                Console.WriteLine("To quit the game, press Esc : ");
+                
 
 
                 Game game = new Game(rows, columns);
@@ -43,6 +40,7 @@ namespace GameOfLife
                     game.Calculate();
                     Console.Clear();
                     game.Print();
+                    game.AliveCellsCount();
                     // System.Threading.Thread.Sleep(1000);//Calculate the next generation after 1 second
                 }
                 Console.WriteLine("Game over!");
