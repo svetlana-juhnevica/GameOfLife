@@ -10,6 +10,7 @@ namespace GameOfLife
     {
         public int Rows;
         public int Columns;
+
         // public static int GenerationCount;
         public Cell[,] Grid;
         public Game(int rows, int columns)
@@ -33,8 +34,8 @@ namespace GameOfLife
          }
         */
         public void RandomFill()
-        {
-            for (var row = 0; row < Rows; row++)
+        { 
+         for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
                 {
@@ -101,7 +102,7 @@ namespace GameOfLife
 
 
         /// Prints the game to the console.
-        public void Print (int timeout = 1000)
+        public void Print (int timeout= 1000)
           {
               var stringBuilder = new StringBuilder();
               for (var row = 0; row < Rows; row++)
@@ -114,18 +115,6 @@ namespace GameOfLife
                   stringBuilder.Append("\n");
 
               }
-        
-       /* public void Print()
-        { 
-            for (int row = 0; row<Rows; row++) { 
-               for (int column = 0; column<Columns; column++) { 
-                    Console.Write(Grid[row, column] ? "x" : " "); 
-                   if (column == Columns - 1) Console.WriteLine("\r"); 
-                } 
-            }
-            Console.SetCursorPosition(0, Console.WindowTop);
-        
-        */
 
            Console.BackgroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
