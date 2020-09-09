@@ -21,12 +21,9 @@ namespace GameOfLife
             RandomFill();
         }
 
-        public enum Cell
-        {
-            Dead,
-            Alive,
-        }
-       
+       /// <summary>
+       /// Randomly fills the grid
+       /// </summary>
         public void RandomFill()
         {
             
@@ -38,15 +35,14 @@ namespace GameOfLife
                 }
 
             }
-           
+            Console.Clear();
         }
 
-       
-
-
+        /// <summary>
+        /// Checks the neighbours around the cell, their status and changes it according to the rules
+        /// </summary>
         public void Calculate()
         {
-            //GenerationCount++;
             var nextGeneration = new Cell[Rows, Columns];
             // Loop through every cell 
             for (var row = 1; row < Rows - 1; row++)
@@ -96,10 +92,9 @@ namespace GameOfLife
                 }
             }
             Grid = nextGeneration;
-            //Console.WriteLine("Generations: {0}", GenerationCount);
         }
 
-        // Count the number of alive cells
+        // Counts the number of alive cells
         public void AliveCellsCount()
         {
             int AliveCellsCount = 0;
@@ -116,8 +111,11 @@ namespace GameOfLife
             }
             Console.WriteLine("Alive cells: {0}", AliveCellsCount);
         }
+
+        /// <summary>
         /// Prints the game to the console.
-        public void Print(int timeout = 1000)
+        /// </summary>  
+        public void Print()
         {
             GenerationCount++;
             var stringBuilder = new StringBuilder();
@@ -138,7 +136,6 @@ namespace GameOfLife
                 Console.SetCursorPosition(0, 0);
                 Console.Write(stringBuilder.ToString());
                 Console.WriteLine("Generations: {0}", GenerationCount);
-                Thread.Sleep(timeout);
 
             }
         }

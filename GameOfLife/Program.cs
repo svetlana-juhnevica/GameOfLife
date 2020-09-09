@@ -10,43 +10,58 @@ namespace GameOfLife
         public static void Main(string[] args)
         {
             {
+                Console.WriteLine("Welcome to the Game of Life! ");
+                Console.WriteLine("To quit the game, press Ctr + C : ");
+                Console.WriteLine(" "); //Makes empty space between the Intro and choice of the field 
+               
                 int rows;
-                Console.WriteLine("Rows : ");
-                while (!int.TryParse(Console.ReadLine(), out rows) || rows< 0)
+                Console.WriteLine("Enter the number of Rows : ");
+                while (!int.TryParse(Console.ReadLine(), out rows) || rows < 0)
                 {
 
                     Console.WriteLine("This is not a valid input. Enter an integer > 0");
 
                 }
-                
+
                 int columns;
-                Console.WriteLine("Columns : ");
+                Console.WriteLine("Enter the number of Columns : ");
                 while (!int.TryParse(Console.ReadLine(), out columns) || columns < 0)
                 {
                     Console.WriteLine("This is not a valid input. Enter an integer > 0");
                 }
-                
-                Console.WriteLine("To coninue the game, press any key : ");
-                Console.WriteLine("To quit the game, press Esc : ");
-                
-
 
                 Game game = new Game(rows, columns);
-                ConsoleKeyInfo input = new ConsoleKeyInfo();
-                ///for each generation you need to press any key
-                while (input.Key != ConsoleKey.Escape)
+
+                /*
+                ///In this method for each generation you need to press any key 
+
+                 ConsoleKeyInfo input = new ConsoleKeyInfo();
+                 while (input.Key != ConsoleKey.Escape)
+                 {
+                     input = Console.ReadKey(true);  
+                     game.Calculate();
+                     Console.Clear();
+                     game.Print();
+                     game.AliveCellsCount();
+                     // System.Threading.Thread.Sleep(1000);//Calculate the next generation after 1 second
+                 }
+                 Console.WriteLine("Game over!");
+                */
+
+                bool RunGame = true;
+                while (RunGame)
                 {
-                    input = Console.ReadKey(true);  
                     game.Calculate();
-                    Console.Clear();
                     game.Print();
                     game.AliveCellsCount();
-                    // System.Threading.Thread.Sleep(1000);//Calculate the next generation after 1 second
+                    System.Threading.Thread.Sleep(1000);//Game is updated each second 
                 }
-                Console.WriteLine("Game over!");
-
-
+                Console.CancelKeyPress += (sender, args) =>
+                {
+                    RunGame = false;
+                };
+            }
+               
             }
         }
     }
-}
