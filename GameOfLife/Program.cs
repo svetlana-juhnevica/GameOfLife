@@ -1,67 +1,47 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 
 namespace GameOfLife
 {
     static class Program
     {
-        public static void Main(string[] args)
+       public static void Main(string[] args)
         {
             {
+                ///Introduction to the Game
                 Console.WriteLine("Welcome to the Game of Life! ");
                 Console.WriteLine("To quit the game, press Ctr + C : ");
                 Console.WriteLine(" "); //Makes empty space between the Intro and choice of the field 
-               
-                int rows;
-                Console.WriteLine("Enter the number of Rows : ");
-                while (!int.TryParse(Console.ReadLine(), out rows) || rows < 0)
-                {
 
-                    Console.WriteLine("This is not a valid input. Enter an integer > 0");
-
-                }
-
-                int columns;
-                Console.WriteLine("Enter the number of Columns : ");
-                while (!int.TryParse(Console.ReadLine(), out columns) || columns < 0)
-                {
-                    Console.WriteLine("This is not a valid input. Enter an integer > 0");
-                }
+                ///User chooses the size of the grid
+                 int rows;
+                 Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
+                 while (!int.TryParse(Console.ReadLine(), out rows) || rows < 0 || rows > 20)
+                 {
+                     Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+                 }
+                 int columns;
+                 Console.WriteLine("Enter the number of Columns from 1 to 20: ");
+                 while (!int.TryParse(Console.ReadLine(), out columns) || columns < 0 || columns > 20)
+                 {
+                     Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+                 }
 
                 Game game = new Game(rows, columns);
-
-                /*
-                ///In this method for each generation you need to press any key 
-
-                 ConsoleKeyInfo input = new ConsoleKeyInfo();
-                 while (input.Key != ConsoleKey.Escape)
-                 {
-                     input = Console.ReadKey(true);  
-                     game.Calculate();
-                     Console.Clear();
-                     game.Print();
-                     game.AliveCellsCount();
-                     // System.Threading.Thread.Sleep(1000);//Calculate the next generation after 1 second
-                 }
-                 Console.WriteLine("Game over!");
-                */
-
+                game.RandomFill();
+                ///The Game is running until Ctrl + C is pressed
                 bool RunGame = true;
                 while (RunGame)
                 {
-                    game.Calculate();
                     game.Print();
-                    game.AliveCellsCount();
-                    System.Threading.Thread.Sleep(1000);//Game is updated each second 
+                   // game.AliveCellsCount();
+                    game.CalculateNewCellStatus();
                 }
                 Console.CancelKeyPress += (sender, args) =>
                 {
                     RunGame = false;
                 };
-            }
-               
-            }
+                }  
         }
     }
+}
+//timer
