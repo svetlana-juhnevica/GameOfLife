@@ -1,56 +1,69 @@
 ﻿using System;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 
 namespace GameOfLife
 {
-    public class Game
+   public class GameLifeCycle
     {
         public int Rows;
         public int Columns;
         public CellStatus[,] Grid;
-        public int GenerationCount = 0;
+        public int GenerationCount;
         public int AliveCellsCount;
 
-        ///Constructor for Game
-        public Game(int rows, int columns)
-        {
-            Rows = rows;
-            Columns = columns;
-            Grid = new CellStatus[Rows, Columns];
-           //RandomFill();
-        }
-
         /// <summary>
-        /// Randomly fills the grid
+        /// Randomly fills the grid according to user's choice of grid size
         /// </summary>
-        public void RandomFill()
+        public void RandomFillByChosenGridSize()
         {
+            Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
+            while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
+            {
+                Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+            }
+            Console.WriteLine("Enter the number of Columns from 1 to 20: ");
+            while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
+            {
+                Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+            }
+            Grid = new CellStatus[Rows, Columns];
             GenerationCount = 1;
+            AliveCellsCount = 0;
             for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
                 {
                     Grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
-                }   
+                    if (Grid[row, column] == CellStatus.Alive)
+                    {
+                        AliveCellsCount++;
+                    }
+                }
+
             }
-            Console.Clear();
+          //  Console.Clear();
         }
 
         /// <summary>
         /// Checks the neighbours around the cell, their status and changes it according to the rules
         /// </summary>
         public void CalculateNewCellStatus(int timeout = 1000)
-        { 
+        {
+            AliveCellsCount = 0;
             var nextGeneration = new CellStatus[Rows, Columns];
             // Loop through every cell 
             for (var row = 1; row < Rows - 1; row++)
             {
-               for (var column = 1; column < Columns - 1; column++)
+                for (var column = 1; column < Columns - 1; column++)
                 {
-                   // Find the alive neighbors
-                    var aliveNeighbors = 0;
+                    if (Grid[row, column] == CellStatus.Alive)
+                    {
+                        AliveCellsCount++;
+                    }
+                        // Find the alive neighbors
+                        var aliveNeighbors = 0;
                     for (var i = -1; i <= 1; i++)
                     {
                         for (var j = -1; j <= 1; j++)
@@ -95,12 +108,11 @@ namespace GameOfLife
             Thread.Sleep(timeout);
         }
 
-         /// <summary>
+        /// <summary>
         /// Prints the game to the console.
         /// </summary>  
         public void Print()
         {
-            AliveCellsCount = 0;
             var stringBuilder = new StringBuilder();
             for (var row = 0; row < Rows; row++)
             {
@@ -108,10 +120,6 @@ namespace GameOfLife
                 {
                     var cell = this.Grid[row, column];
                     stringBuilder.Append(cell == CellStatus.Alive ? "A" : ".");
-                    if (Grid[row, column] == CellStatus.Alive)
-                    {
-                        AliveCellsCount++;
-                    }
                 }
                 stringBuilder.Append("\n");
             }
@@ -121,12 +129,7 @@ namespace GameOfLife
             Console.Clear();
             Console.Write(stringBuilder.ToString());
             Console.WriteLine("Generations: {0}", GenerationCount);
-            Console.WriteLine("AliveCells: {0}", AliveCellsCount);
+            Console.WriteLine("Alive cells: {0}", AliveCellsCount);
         }
     }
 }
-
-    
-  
-      
-    
