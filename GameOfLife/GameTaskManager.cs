@@ -5,48 +5,114 @@ namespace GameOfLife
 {
     public class GameTaskManager
     {
-        private GameLifeCycle GameLifeCycle;
+        private GameTasks GameTasks;
+        private GameViewer GameViewer;
+        private GameModel GameModel;
+        private GameFileSaver GameFileSaver;
         public static Timer timer;
         public GameTaskManager()
         {
-            GameLifeCycle = new GameLifeCycle();
+            GameTasks = new GameTasks();
+            GameViewer = new GameViewer();
+            GameModel = new GameModel();
+            GameFileSaver = new GameFileSaver();
         }
         /// <summary>
-        /// Undergoes the full cycle of the game
+        /// The game starts with introduction and options to choose the game task
         /// </summary>
+        public void StartGame()
+        {
+            GameViewer.PrintGameIntro();
+            GameViewer.PrintGameOptions();
+
+            /// User makes choice: to continue, quit or start a new game 
+            while (true)
+            {
+                string input = Console.ReadLine().ToLower();
+                switch (input)
+                {
+                    //if "quit" is pressed 
+                    case "q":
+                        Environment.Exit(0);
+                        break;
+
+                    //if "start a new game" is pressed 
+                    case "n":
+                        NewGame();
+                        break;
+
+                    // if "continue the game" is pressed 
+                    case "c":
+                        ContinueGame();
+                        break;
+
+                    // if unknown command is pressed 
+                    default:
+                        Console.WriteLine("Unrecognized command, make another choice");
+                        break;
+                }
+            }
+        }
+
+        /// <summary> 
+        /// A new game undergoes the full cycle 
+        /// </summary> 
         public void NewGame()
         {
-            GameLifeCycle.RandomFillByChosenGridSize();
-            ///The Game is running until Ctrl + C is pressed
+            GameTasks.RandomFillByChosenGridSize();
+
+            ///The Game is running until Ctrl + C is pressed 
             do
-            { //StartTimer();
+            { //StartTimer(); 
                 while (!Console.KeyAvailable)
                 {
-                    
-                    GameLifeCycle.Print();
-                   
-                    GameLifeCycle.CalculateNewCellStatus();
-                 }
-                  //StartTimer();
+                    GameTasks.CalculateNewCellStatus();
+                    GameTasks.Print();
+
+                }
+                //StartTimer(); 
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
             timer.Enabled = false;
-            //SaveGame();
+            GameFileSaver.SaveGame(GameModel);
             Console.WriteLine("The game is over");
             Environment.Exit(0);
         }
-        /*  public void StartTimer()
-          {
+        public void StartTimer()
+        {
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
             timer.Enabled = true;
-          }
-     public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        }
+        public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-          GameLifeCycle.CalculateNewCellStatus();
-          GameLifeCycle.Print();
-        }*/
+            GameTasks.CalculateNewCellStatus();
+            GameTasks.Print();
+        }
+        public void ContinueGame()
+        {
+            var GameModel = GameFileSaver.LoadGame();
+            if (GameModel == null)
+            {
+                NewGame();
+            }
+            do
+            {
+                while (!Console.KeyAvailable)
+                {
+                    //StartTimer();
+                    GameTasks.Print();
+                    GameTasks.CalculateNewCellStatus();
+                }
+
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+            timer.Enabled = false;
+            GameFileSaver.SaveGame(GameModel);
+            Console.WriteLine("The game is over");
+            Environment.Exit(0);
+        }
+    }
 }
-}
+
 
