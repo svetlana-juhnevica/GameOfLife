@@ -5,25 +5,23 @@ namespace GameOfLife
 {
     public class GameTaskManager
     {
-        private GameTasks GameTasks;
-        private GameViewer GameViewer;
-        private GameModel GameModel;
-        private GameFileSaver GameFileSaver;
-        public static Timer timer;
+        private CellStatusCalculator cellStatusCalculator;
+        private GameViewer gameViewer;
+        private GameFileSaver gameFileSaver;
+        private Timer timer;
         public GameTaskManager()
         {
-            GameTasks = new GameTasks();
-            GameViewer = new GameViewer();
-            GameModel = new GameModel();
-            GameFileSaver = new GameFileSaver();
+            cellStatusCalculator= new CellStatusCalculator();
+            gameViewer = new GameViewer();
+            gameFileSaver = new GameFileSaver();
         }
         /// <summary>
         /// The game starts with introduction and options to choose the game task
         /// </summary>
         public void StartGame()
         {
-            GameViewer.PrintGameIntro();
-            GameViewer.PrintGameOptions();
+            gameViewer.PrintGameIntro();
+            gameViewer.PrintGameOptions();
 
             /// User makes choice: to continue, quit or start a new game 
             while (true)
@@ -59,21 +57,21 @@ namespace GameOfLife
         /// </summary> 
         public void NewGame()
         {
-            GameTasks.RandomFillByChosenGridSize();
+            GridSize gridSize = gameViewer.GetGridSize();
+            cellStatusCalculator.RandomFillByChosenGridSize();
 
             ///The Game is running until Ctrl + C is pressed 
             do
-            { //StartTimer(); 
+            {
                 while (!Console.KeyAvailable)
                 {
-                    GameTasks.CalculateNewCellStatus();
-                    GameTasks.Print();
-
+                    cellStatusCalculator = new CellStatusCalculator(gameModel);
+                    cellStatusCalculator.CalculateNewCellStatus();
+                    StartTimer();
                 }
-                //StartTimer(); 
+
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
             timer.Enabled = false;
-            GameFileSaver.SaveGame(GameModel);
             Console.WriteLine("The game is over");
             Environment.Exit(0);
         }
@@ -87,12 +85,18 @@ namespace GameOfLife
         }
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            GameTasks.CalculateNewCellStatus();
-            GameTasks.Print();
+            GameModel gameModel = new GameModel
+            {
+                Grid = cellStatusCalculator.CalculateNewCellStatus(),
+                GenerationCount = cellStatusCalculator.GenerationCount,
+                AliveCellsCount = cellStatusCalculator.AliveCellsCount
+            };
+            gameViewer.Print(gameModel);
+            gameFileSaver.SaveGame(gameModel);
         }
         public void ContinueGame()
         {
-            var GameModel = GameFileSaver.LoadGame();
+            var GameModel = gameFileSaver.LoadGame();
             if (GameModel == null)
             {
                 NewGame();
@@ -101,18 +105,18 @@ namespace GameOfLife
             {
                 while (!Console.KeyAvailable)
                 {
-                    //StartTimer();
-                    GameTasks.Print();
-                    GameTasks.CalculateNewCellStatus();
+                    cellStatusCalculator = new CellStatusCalculator(gameModel);
+                    cellStatusCalculator.CalculateNewCellStatus();
+                    StartTimer();
                 }
 
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
             timer.Enabled = false;
-            GameFileSaver.SaveGame(GameModel);
             Console.WriteLine("The game is over");
             Environment.Exit(0);
         }
     }
 }
+
 
 
