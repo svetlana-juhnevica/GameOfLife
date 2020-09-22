@@ -8,23 +8,15 @@ namespace GameOfLife
     public class CellStatusCalculator
     {
         private GridSize gridSize;
-        private CellStatus[,] currentGrid;
-        private CellStatusCalculator
+        private CellStatus[,] Grid;
         public int GenerationCount { get; set; }
         public int AliveCellsCount { get; set; }
 
         public CellStatusCalculator(GameModel gameModel)
         {
-            this.GenerationCount = gameModel.GenerationCount;
-            this.AliveCellsCount = gameModel.AliveCellsCount;
-            this.currentGrid = gameModel.Grid;
-            int rows = this.currentGrid.GetLength(1);
-            int columns = this.currentGrid.GetLength(0);
-            this.gridSize = new GridSize
-            {
-                Rows = rows,
-                Columns = columns,
-            };
+            GenerationCount = gameModel.GenerationCount;
+            AliveCellsCount = gameModel.AliveCellsCount;
+            Grid = gameModel.Grid;
         }
         /// <summary>
         /// Randomly fills the grid according to user's choice of grid size
@@ -44,9 +36,7 @@ namespace GameOfLife
                         AliveCellsCount++;
                     }
                 }
-
             }
-            Console.Clear();
         }
 
         /// <summary>
@@ -61,7 +51,7 @@ namespace GameOfLife
             {
                 for (var column = 1; column < gridSize.Columns - 1; column++)
                 {
-                    if (currentGrid[row, column] == CellStatus.Alive)
+                    if (Grid[row, column] == CellStatus.Alive)
                     {
                         AliveCellsCount++;
                     }
@@ -71,10 +61,10 @@ namespace GameOfLife
                     {
                         for (var j = -1; j <= 1; j++)
                         {
-                            aliveNeighbors += currentGrid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
+                            aliveNeighbors += Grid[row + i, column + j] == CellStatus.Alive ? 1 : 0;
                         }
                     }
-                    var currentCell = currentGrid[row, column];
+                    var currentCell = Grid[row, column];
 
                     // Subtract the current cell from the neighbor count
                     aliveNeighbors -= currentCell == CellStatus.Alive ? 1 : 0;
@@ -106,7 +96,7 @@ namespace GameOfLife
                     }
                 }
             }
-            currentGrid = nextGeneration;
+            Grid = nextGeneration;
             GenerationCount++;
         }
     }

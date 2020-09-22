@@ -6,7 +6,7 @@ namespace GameOfLife
 {
   public class GridSize
     {
-        public int Rows { get; set; }
-        public int Columns { get; set; }
+        public int Rows;
+        public int Columns;
     }
 }

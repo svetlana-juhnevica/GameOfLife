@@ -48,8 +48,6 @@ namespace GameOfLife
         public void Print(GameModel gameModel)
         {
             var Grid = gameModel.Grid;
-            int AliveCellsCount = gameModel.AliveCellsCount;
-            int GenerationCount = gameModel.GenerationCount;
             int Rows = Grid.GetLength(1);
             int Columns = Grid.GetLength(0);
             Console.Clear();
@@ -67,8 +65,8 @@ namespace GameOfLife
             Console.BackgroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
             Console.WriteLine();
-            Console.WriteLine("Generations: {0}", GenerationCount);
-            Console.WriteLine("AliveCells: {0}", AliveCellsCount);
+            Console.WriteLine("Generations: {0}", gameModel.GenerationCount);
+            Console.WriteLine("AliveCells: {0}", gameModel.AliveCellsCount);
             Console.WriteLine(" ");// to make spacing between the game and choice of actions
             Console.WriteLine("To quit the game, press Ctrl + C : ");
         }

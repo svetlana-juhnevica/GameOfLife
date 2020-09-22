@@ -56,8 +56,8 @@ namespace GameOfLife
         /// A new game undergoes the full cycle 
         /// </summary> 
         public void NewGame()
-        {
-            GridSize gridSize = gameViewer.GetGridSize();
+        {   
+            gameViewer.GetGridSize();
             cellStatusCalculator.RandomFillByChosenGridSize();
 
             ///The Game is running until Ctrl + C is pressed 
@@ -65,9 +65,7 @@ namespace GameOfLife
             {
                 while (!Console.KeyAvailable)
                 {
-                    cellStatusCalculator = new CellStatusCalculator(gameModel);
-                    cellStatusCalculator.CalculateNewCellStatus();
-                    StartTimer();
+                   StartTimer();
                 }
 
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
@@ -85,12 +83,8 @@ namespace GameOfLife
         }
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            GameModel gameModel = new GameModel
-            {
-                Grid = cellStatusCalculator.CalculateNewCellStatus(),
-                GenerationCount = cellStatusCalculator.GenerationCount,
-                AliveCellsCount = cellStatusCalculator.AliveCellsCount
-            };
+            GameModel gameModel = new GameModel();
+            cellStatusCalculator.CalculateNewCellStatus();
             gameViewer.Print(gameModel);
             gameFileSaver.SaveGame(gameModel);
         }
@@ -99,14 +93,13 @@ namespace GameOfLife
             var GameModel = gameFileSaver.LoadGame();
             if (GameModel == null)
             {
-                NewGame();
+               Console.WriteLine("You don't have any saved games, start a new one");
+               NewGame();
             }
             do
             {
                 while (!Console.KeyAvailable)
                 {
-                    cellStatusCalculator = new CellStatusCalculator(gameModel);
-                    cellStatusCalculator.CalculateNewCellStatus();
                     StartTimer();
                 }
 
