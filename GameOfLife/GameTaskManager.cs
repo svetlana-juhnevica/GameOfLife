@@ -1,115 +1,119 @@
-﻿using System;
+﻿using GameOfLife.GameOfLife;
+using System;
 using System.Timers;
 
 namespace GameOfLife
 {
     public class GameTaskManager
-    {
-        private CellStatusCalculator cellStatusCalculator;
-        private GameViewer gameViewer;
-        private GameFileSaver gameFileSaver;
-        private Timer timer;
-        public GameTaskManager()
         {
-            cellStatusCalculator= new CellStatusCalculator();
-            gameViewer = new GameViewer();
-            gameFileSaver = new GameFileSaver();
-        }
-        /// <summary>
-        /// The game starts with introduction and options to choose the game task
-        /// </summary>
-        public void StartGame()
-        {
-            gameViewer.PrintGameIntro();
-            gameViewer.PrintGameOptions();
-
-            /// User makes choice: to continue, quit or start a new game 
-            while (true)
+            private Game game;
+            private GameViewer gameViewer;
+            private GameFileSaver gameFileSaver;
+            public static Timer timer;
+            public GameTaskManager()
             {
-                string input = Console.ReadLine().ToLower();
-                switch (input)
+                game = new Game();
+                gameViewer = new GameViewer();
+                gameFileSaver = new GameFileSaver();
+            }
+            /// <summary>
+            /// The game starts with introduction and options to choose the game task
+            /// </summary>
+            public void StartGame()
+            {
+                gameViewer.PrintGameIntro();
+                gameViewer.PrintGameOptions();
+
+                /// User makes choice: to continue, quit or start a new game 
+                while (true)
                 {
-                    //if "quit" is pressed 
-                    case "q":
-                        Environment.Exit(0);
-                        break;
+                    string input = Console.ReadLine().ToLower();
+                    switch (input)
+                    {
+                        //if "quit" is pressed 
+                        case "q":
+                            Environment.Exit(0);
+                            break;
 
-                    //if "start a new game" is pressed 
-                    case "n":
-                        NewGame();
-                        break;
+                        //if "start a new game" is pressed 
+                        case "n":
+                            NewGame();
+                            break;
 
-                    // if "continue the game" is pressed 
-                    case "c":
-                        ContinueGame();
-                        break;
+                        // if "continue the game" is pressed 
+                        case "c":
+                            ContinueGame();
+                            break;
 
-                    // if unknown command is pressed 
-                    default:
-                        Console.WriteLine("Unrecognized command, make another choice");
-                        break;
+                        // if unknown command is pressed 
+                        default:
+                            Console.WriteLine("Unrecognized command, make another choice");
+                            break;
+                    }
                 }
             }
-        }
 
-        /// <summary> 
-        /// A new game undergoes the full cycle 
-        /// </summary> 
-        public void NewGame()
-        {   
-            gameViewer.GetGridSize();
-            cellStatusCalculator.RandomFillByChosenGridSize();
-
-            ///The Game is running until Ctrl + C is pressed 
-            do
+            /// <summary> 
+            /// A new game undergoes the full cycle 
+            /// </summary> 
+            public void NewGame()
             {
-                while (!Console.KeyAvailable)
-                {
-                   StartTimer();
-                }
+            game.RandomFillByChosenGridSize();
 
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-            timer.Enabled = false;
-            Console.WriteLine("The game is over");
-            Environment.Exit(0);
-        }
-        public void StartTimer()
-        {
-            timer = new System.Timers.Timer();
-            timer.Interval = 1000;
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = true;
-            timer.Enabled = true;
-        }
-        public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            GameModel gameModel = new GameModel();
-            cellStatusCalculator.CalculateNewCellStatus();
-            gameViewer.Print(gameModel);
-            gameFileSaver.SaveGame(gameModel);
-        }
-        public void ContinueGame()
-        {
-            var GameModel = gameFileSaver.LoadGame();
-            if (GameModel == null)
-            {
-               Console.WriteLine("You don't have any saved games, start a new one");
-               NewGame();
+                ///The Game is running until Ctrl + C is pressed 
+                do
+                { 
+                    while (!Console.KeyAvailable)
+                    {
+                      // StartTimer(); 
+                        game.Print();
+                        game.CalculateNewCellStatus();
+                        gameFileSaver.SaveGame(game);
+                    }
+                    
+                } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+                timer.Enabled = false; 
+                Console.WriteLine("The game is over");
+                Environment.Exit(0);
             }
-            do
+            public void StartTimer()
             {
-                while (!Console.KeyAvailable)
+                timer = new System.Timers.Timer();
+                timer.Interval = 1000;
+                timer.Elapsed += OnTimedEvent;
+                timer.AutoReset = true;
+                timer.Enabled = true;
+            }
+            public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+            {
+                game.CalculateNewCellStatus();
+               // game.Print();
+                gameFileSaver.SaveGame(game);
+            }
+            public void ContinueGame()
+            {
+                var game= gameFileSaver.LoadGame();
+                if (game == null)
                 {
-                    StartTimer();
+                Console.WriteLine("You do not have any games saved, start a new one");
+                    NewGame();
                 }
+                do
+                {
+                    while (!Console.KeyAvailable)
+                    {
+                       // StartTimer();
+                       game.Print();
+                       game.CalculateNewCellStatus();
+                       gameFileSaver.SaveGame(game);
+                     }
 
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-            timer.Enabled = false;
-            Console.WriteLine("The game is over");
-            Environment.Exit(0);
+                } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+                timer.Enabled = false;
+                
+                Console.WriteLine("The game is over");
+                Environment.Exit(0);
+            }
         }
     }
-}
-
-
 
