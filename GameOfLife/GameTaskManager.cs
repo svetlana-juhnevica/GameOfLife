@@ -49,7 +49,7 @@ namespace GameOfLife
 
                         // if unknown command is pressed 
                         default:
-                            Console.WriteLine("Unrecognized command, make another choice");
+                        gameViewer.WarningOfWrongCommand();
                             break;
                     }
                 }
@@ -75,7 +75,6 @@ namespace GameOfLife
                     
                 } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
                 timer.Enabled = false; 
-                Console.WriteLine("The game is over");
                 Environment.Exit(0);
             }
             public void StartTimer()
@@ -101,7 +100,7 @@ namespace GameOfLife
                 var game= gameFileSaver.LoadGame();
                 if (game == null)
                 {
-                Console.WriteLine("You do not have any games saved, start a new one");
+                gameViewer.WarningOfNoSavedGame();
                     NewGame();
                 }
                 do
@@ -116,7 +115,6 @@ namespace GameOfLife
 
                 } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
                 timer.Enabled = false;
-                Console.WriteLine("The game is over");
                 Environment.Exit(0);
             }
         }

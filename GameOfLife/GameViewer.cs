@@ -46,6 +46,21 @@ namespace GameOfLife
         {
             Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
         }
+        /// <summary>
+        /// Warning if when choosing option for the game unrecognized command is entered
+        /// </summary>
+        public void WarningOfWrongCommand()
+        {
+            Console.WriteLine("Unrecognized command, make another choice");
+        }
+        /// <summary>
+        /// Warning if when choosing option for the game unrecognized command is entered
+        /// </summary>
+        public void WarningOfNoSavedGame()
+        {
+          Console.WriteLine("You do not have any games saved, start a new one");  
+        }
+        
         /// <summary> 
         /// Prints the game to the console with number of generations and alive cells
         /// </summary> 
