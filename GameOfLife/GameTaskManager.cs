@@ -1,9 +1,11 @@
-﻿using GameOfLife.GameOfLife;
-using System;
+﻿using System;
 using System.Timers;
 
 namespace GameOfLife
 {
+    /// <summary> 
+   /// Class for managing tasks:start a new game, continue or exit. 
+  /// </summary>
     public class GameTaskManager
         {
             private Game game;
@@ -66,7 +68,7 @@ namespace GameOfLife
                     while (!Console.KeyAvailable)
                     {
                       // StartTimer(); 
-                        game.Print();
+                        gameViewer.Print(game);
                         game.CalculateNewCellStatus();
                         gameFileSaver.SaveGame(game);
                     }
@@ -90,7 +92,11 @@ namespace GameOfLife
                // game.Print();
                 gameFileSaver.SaveGame(game);
             }
-            public void ContinueGame()
+
+        /// <summary> 
+        /// A saved game continues to the next cycle 
+        /// </summary> 
+        public void ContinueGame()
             {
                 var game= gameFileSaver.LoadGame();
                 if (game == null)
@@ -103,14 +109,13 @@ namespace GameOfLife
                     while (!Console.KeyAvailable)
                     {
                        // StartTimer();
-                       game.Print();
+                       gameViewer.Print(game);
                        game.CalculateNewCellStatus();
                        gameFileSaver.SaveGame(game);
                      }
 
                 } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
                 timer.Enabled = false;
-                
                 Console.WriteLine("The game is over");
                 Environment.Exit(0);
             }

@@ -1,6 +1,8 @@
 ﻿namespace GameOfLife
 {
-    //The status for the cell whether it is dead or alive
+    /// <summary> 
+    /// The status for the cell whether it is dead or alive
+    /// </summary> 
     public enum CellStatus
     {
         Dead,

@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
-
-namespace GameOfLife
-{
-
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading;
 
     namespace GameOfLife
     {
+        /// <summary> 
+        /// The main class of the game which rnadomly fills the grid with dead and alive cells
+        /// and generates the next population
+        /// </summary> 
         public class Game
         {
             public int Rows;
@@ -20,13 +15,11 @@ namespace GameOfLife
             public CellStatus[,] Grid;
             public int GenerationCount;
             public int AliveCellsCount;
-            private GameViewer GameViewer;
-            //  private GameModel GameModel;
+            private GameViewer gameViewer;
 
             public Game()
             {
-                GameViewer = new GameViewer();
-                // GameModel = new GameModel();
+                gameViewer = new GameViewer();
             }
 
             /// <summary> 
@@ -34,18 +27,16 @@ namespace GameOfLife
             /// </summary> 
             public void RandomFillByChosenGridSize()
             {
-                Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
+                gameViewer.AskForRows();
                 while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
                 {
-                    Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+                    gameViewer.WarningOfWrongInput();
                 }
-
-                Console.WriteLine("Enter the number of Columns from 1 to 20: ");
+                gameViewer.AskForColumns();
                 while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
                 {
-                    Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+                    gameViewer.WarningOfWrongInput();
                 }
-
                 Grid = new CellStatus[Rows, Columns];
                 GenerationCount = 1;
                 AliveCellsCount = 0;
@@ -60,7 +51,6 @@ namespace GameOfLife
                         }
                     }
                 }
-                //  Console.Clear(); 
             }
 
             /// <summary> 
@@ -124,58 +114,7 @@ namespace GameOfLife
                 GenerationCount++;
                 Thread.Sleep(timeout);
             }
-
-
-            /// <summary> 
-            /// Prints the game to the console. 
-            /// </summary>   
-            public void Print()
-            {
-                var stringBuilder = new StringBuilder();
-                for (var row = 0; row < Rows; row++)
-                {
-                    for (var column = 0; column < Columns; column++)
-                    {
-                        var cell = Grid[row, column];
-                        stringBuilder.Append(cell == CellStatus.Alive ? "A" : ".");
-                    }
-                    stringBuilder.Append("\n");
-                }
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.CursorVisible = false;
-                Console.SetCursorPosition(0, 0);
-                Console.Clear();
-                Console.Write(stringBuilder.ToString());
-                Console.WriteLine("Generations: {0}", GenerationCount);
-                Console.WriteLine("Alive cells: {0}", AliveCellsCount);
-            }
         }
     }
-}
-
-/*    //Console.Clear();
-            Console.SetCursorPosition(0, 0);
-            // AliveCellsCount = 0;
-            for (var row = 0; row < Rows; row++)
-            {
-                for (var column = 0; column < Columns; column++)
-                {
-                    var cell = this.Grid[row, column];
-                    Console.Write(cell == CellStatus.Alive ? "A" : ".");
-                    // if (Grid[row, column] == CellStatus.Alive)
-                    //{
-                    //  AliveCellsCount++;
-                    //}
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.CursorVisible = false;
-            Console.WriteLine();
-            Console.WriteLine("Generations: {0}", GenerationCount);
-            Console.WriteLine("AliveCells: {0}", AliveCellsCount);
-            Console.WriteLine(" ");// to make spacing between the game and choice of actions
-            Console.WriteLine("To quit the game, press Ctrl + C : ");*/
 
 

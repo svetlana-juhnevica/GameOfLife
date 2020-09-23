@@ -1,9 +1,11 @@
-﻿using GameOfLife.GameOfLife;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.IO;
 
 namespace GameOfLife
 {
+    /// <summary> 
+   /// A class to save the game to the file and load it from the file
+   /// </summary> 
     public class GameFileSaver
     {
         private Game game;
@@ -34,7 +36,6 @@ namespace GameOfLife
              return null;   
             }
          }
-        
-    }
+}
 
 
