@@ -56,7 +56,7 @@ using System.Threading;
             /// <summary> 
             /// Checks the neighbours around the cell, their status and changes it according to the rules 
             /// </summary> 
-            public void CalculateNewCellStatus(int timeout =1000)
+            public void CalculateNewCellStatus()
             {
                 AliveCellsCount = 0;
                 var nextGeneration = new CellStatus[Rows, Columns];
@@ -112,7 +112,7 @@ using System.Threading;
                 }
                 Grid = nextGeneration;
                 GenerationCount++;
-                Thread.Sleep(timeout);
+                
             }
         }
     }

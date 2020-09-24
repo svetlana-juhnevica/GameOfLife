@@ -44,7 +44,7 @@ namespace GameOfLife
         /// </summary>
         public void WarningOfWrongInput()
         {
-            Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+            Console.WriteLine("This number is out of range");
         }
         /// <summary>
         /// Warning if when choosing option for the game unrecognized command is entered
@@ -83,6 +83,10 @@ namespace GameOfLife
             Console.Write(stringBuilder.ToString());
             Console.WriteLine("Generations: {0}", game.GenerationCount);
             Console.WriteLine("Alive cells: {0}", game.AliveCellsCount);
+        }
+        public void AskForGamesCount()
+        {
+            Console.WriteLine("How many games would you like to start (from 1 to 1000)?:");
         }
     }
 }

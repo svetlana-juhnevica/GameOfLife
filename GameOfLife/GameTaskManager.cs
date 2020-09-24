@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace GameOfLife
@@ -11,8 +12,10 @@ namespace GameOfLife
             private Game game;
             private GameViewer gameViewer;
             private GameFileSaver gameFileSaver;
+            private List<Game> games = new List<Game>();
             public static Timer timer;
-            public GameTaskManager()
+            public int GamesNumber;
+        public GameTaskManager()
             {
                 game = new Game();
                 gameViewer = new GameViewer();
@@ -25,7 +28,7 @@ namespace GameOfLife
             {
                 gameViewer.PrintGameIntro();
                 gameViewer.PrintGameOptions();
-
+               
                 /// User makes choice: to continue, quit or start a new game 
                 while (true)
                 {
@@ -55,28 +58,37 @@ namespace GameOfLife
                 }
             }
 
-            /// <summary> 
-            /// A new game undergoes the full cycle 
-            /// </summary> 
-            public void NewGame()
+        /// <summary> 
+        /// A new game undergoes the full cycle 
+        /// </summary> 
+        public void NewGame()
+        {
+            gameViewer.AskForGamesCount();
+            while (!int.TryParse(Console.ReadLine(), out GamesNumber) || GamesNumber < 0 || GamesNumber > 1000)
             {
-            game.RandomFillByChosenGridSize();
+                gameViewer.WarningOfWrongInput();
+            }
+            for (int i = 0; i < GamesNumber; i++)
+            {
+                game.RandomFillByChosenGridSize();
 
                 ///The Game is running until Ctrl + C is pressed 
+               StartTimer(); 
                 do
-                { 
+                {
                     while (!Console.KeyAvailable)
                     {
-                      // StartTimer(); 
-                        gameViewer.Print(game);
-                        game.CalculateNewCellStatus();
-                        gameFileSaver.SaveGame(game);
+                         
+                      //  gameViewer.Print(game);
+                      //  game.CalculateNewCellStatus();
+                      //  gameFileSaver.SaveGame(game);
                     }
-                    
+
                 } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-                timer.Enabled = false; 
+                timer.Enabled = false;
                 Environment.Exit(0);
             }
+        }
             public void StartTimer()
             {
                 timer = new System.Timers.Timer();
@@ -88,7 +100,7 @@ namespace GameOfLife
             public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
             {
                 game.CalculateNewCellStatus();
-               // game.Print();
+                gameViewer.Print(game);
                 gameFileSaver.SaveGame(game);
             }
 
