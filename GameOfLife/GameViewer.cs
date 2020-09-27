@@ -26,28 +26,43 @@ namespace GameOfLife
             Console.WriteLine("To start a new game, press N : ");
         }
         /// <summary>
+        /// Ask the user to enter the number of games he would like to generate
+        /// </summary>
+           public void AskForGamesNumber()
+        {
+            Console.WriteLine("Enter the number of Games you would like to start (from 1 to 1000 : ");
+        }
+        /// <summary>
+        /// Ask the user to enter the number of rows
+        /// </summary>
+        public void AskForGamesToDisplay()
+        {
+            Console.WriteLine("Enter which games you would like to display (not more than 8) : ");
+        }
+        /// <summary>
         /// Ask the user to enter the number of rows
         /// </summary>
         public void AskForRows()
         {
             Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
         }
-        /// <summary>
-        /// Ask the user to enter the number of columns
-        /// </summary>
+        /// <summary> 
+        /// Ask the user to enter the number of columns 
+        /// </summary> 
         public void AskForColumns()
         {
-            Console.WriteLine("Enter the number of Columns from 1 to 20: ");
+           Console.WriteLine("Enter the number of Columns from 1 to 20: ");
         }
-        /// <summary>
-        /// Warning if number of rows or columns is not an integer from 1 to 20
-        /// </summary>
-        public void WarningOfWrongInput()
+
+            /// <summary>
+            /// Warning if the entered input does not correspond to the requirements
+            /// </summary>
+            public void WarningOfWrongInput()
         {
-            Console.WriteLine("This is not a valid input. Enter an integer from 1 to 20");
+            Console.WriteLine("Your input is out of range. try again");
         }
         /// <summary>
-        /// Warning if when choosing option for the game unrecognized command is entered
+        /// Warning if when choosing option for the game, unrecognized command is entered
         /// </summary>
         public void WarningOfWrongCommand()
         {

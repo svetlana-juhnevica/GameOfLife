@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GameOfLife
@@ -9,9 +11,11 @@ namespace GameOfLife
     public class GameFileSaver
     {
         private Game game;
+        private List<Game> games;
         public GameFileSaver()
         {
-            Game game = new Game();
+          Game  game = new Game();
+          List<Game> games = new List<Game>();
         }
         /// <summary>
         /// Save the game to the file
@@ -27,14 +31,33 @@ namespace GameOfLife
         /// </summary>
         public Game LoadGame()
          {
-             if (File.Exists("GameOfLife.json"))
-             {
+            try { 
                  var jsonString = File.ReadAllText("GameOfLife.json");
                  var game = JsonConvert.DeserializeObject<Game>(jsonString);
                  return game;
              }
-             return null;   
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }  
             }
+        public void SaveGames(List<Game> games)
+        {
+            foreach(Game game in games)
+            {
+                SaveGame(game);
+            }
+        }
+        public List<Game> LoadGames()
+        {
+            foreach(Game game in games)
+            {
+                LoadGame();
+                games.Add(game);
+            }
+            return games;
+        }
          }
 }
 

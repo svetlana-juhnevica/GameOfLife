@@ -26,17 +26,17 @@ using System.Threading;
             /// Randomly fills the grid according to user's choice of grid size 
             /// </summary> 
             public void RandomFillByChosenGridSize()
+           {
+            gameViewer.AskForRows();
+            while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
             {
-                gameViewer.AskForRows();
-                while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
-                {
-                    gameViewer.WarningOfWrongInput();
-                }
+                gameViewer.WarningOfWrongInput();
+            }
                 gameViewer.AskForColumns();
-                while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
-                {
-                    gameViewer.WarningOfWrongInput();
-                }
+            while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
+            {
+                gameViewer.WarningOfWrongInput();
+            }
                 Grid = new CellStatus[Rows, Columns];
                 GenerationCount = 1;
                 AliveCellsCount = 0;
