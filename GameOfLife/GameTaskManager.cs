@@ -13,9 +13,11 @@ namespace GameOfLife
         private GameViewer gameViewer;
         private GameFileSaver gameFileSaver;
         private List<Game> games;
-        private List<int> printedGames;
+        //  private List<int> printedGames;
         public static Timer timer;
         public int GamesNumber;
+        ConsoleKeyInfo cki;
+
         public GameTaskManager()
         {
             games = new List<Game>();
@@ -65,26 +67,32 @@ namespace GameOfLife
         /// </summary> 
         public void NewGame()
         {
-            gameViewer.AskForGamesNumber();
-            while (!int.TryParse(Console.ReadLine(), out GamesNumber) || GamesNumber < 0 || GamesNumber > 1000)
-            {
-                gameViewer.WarningOfWrongInput();
-            }
+
             game.RandomFillByChosenGridSize();
-
-            ///The Game is running until Ctrl + C is pressed 
+            // Establish an event handler to process key press events.
+            Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
             StartTimer();
-            do
-            {
-                while (!Console.KeyAvailable)
-                {
-                }
 
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-            timer.Enabled = false;
-            Environment.Exit(0);
-        }
-        public void StartTimer()
+        } 
+
+            
+
+           
+       private void myHandler(object sender, ConsoleCancelEventArgs args)
+            {
+                // Set the Cancel property to true to prevent the process from terminating.
+
+                args.Cancel = true;
+                timer.Enabled = false;
+                gameViewer.PauseGameOptions();
+                
+            }
+          //  timer.Enabled = false;
+          //  Console.WriteLine("The game is over");
+         //   Environment.Exit(0);
+        
+
+            public void StartTimer()
         {
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
@@ -98,7 +106,6 @@ namespace GameOfLife
             gameViewer.Print(game);
             gameFileSaver.SaveGame(game);
         }
-
         /// <summary> 
         /// A saved game continues to the next cycle 
         /// </summary> 
@@ -116,22 +123,29 @@ namespace GameOfLife
                 while (!Console.KeyAvailable)
                 {
                 }
-
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
             timer.Enabled = false;
             Environment.Exit(0);
         }
         /// <summary>
-        /// To generate games according to the
+        /// To generate games according to the user's chosen number of games
         /// </summary>
         public void GenerateGames()
-        {
+        { 
+            gameViewer.AskForGamesNumber();
+            while (!int.TryParse(Console.ReadLine(), out GamesNumber) || GamesNumber < 0 || GamesNumber > 1000)
+            {
+                gameViewer.WarningOfWrongInput();
+            }
             for (int g = 0; g < GamesNumber; g++)
             {
                 game.RandomFillByChosenGridSize();
                 games.Add(game);
             }
         }
+        /// <summary>
+        /// Calculates next generation grid for generated games
+        /// </summary>
         public void CalculateGamesNewCellStatus()
         {
             foreach (Game game in games)

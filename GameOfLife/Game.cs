@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading;
 
@@ -16,8 +17,8 @@ using System.Threading;
             public int GenerationCount;
             public int AliveCellsCount;
             private GameViewer gameViewer;
-
-            public Game()
+            public  List<Game> games= new List<Game>();
+        public Game()
             {
                 gameViewer = new GameViewer();
             }
@@ -28,11 +29,13 @@ using System.Threading;
             public void RandomFillByChosenGridSize()
            {
             gameViewer.AskForRows();
+          
             while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
             {
                 gameViewer.WarningOfWrongInput();
             }
-                gameViewer.AskForColumns();
+             gameViewer.AskForColumns();
+         
             while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
             {
                 gameViewer.WarningOfWrongInput();
@@ -56,8 +59,9 @@ using System.Threading;
             /// <summary> 
             /// Checks the neighbours around the cell, their status and changes it according to the rules 
             /// </summary> 
-            public void CalculateNewCellStatus(int timeout =1000)
+            public void CalculateNewCellStatus()
             {
+                bool IsGameActive= false;
                 AliveCellsCount = 0;
                 var nextGeneration = new CellStatus[Rows, Columns];
                 // Loop through every cell  
@@ -65,10 +69,10 @@ using System.Threading;
                 {
                     for (var column = 1; column < Columns - 1; column++)
                     {
-                        if (Grid[row, column] == CellStatus.Alive)
+                       /* if (Grid[row, column] == CellStatus.Alive)
                         {
                             AliveCellsCount++;
-                        }
+                        }*/
                         // Find the alive neighbors 
                         var aliveNeighbors = 0;
                         for (var i = -1; i <= 1; i++)
@@ -108,12 +112,21 @@ using System.Threading;
                         {
                             nextGeneration[row, column] = currentCell;
                         }
+                    if (currentCell == CellStatus.Alive)
+                    {
+                        AliveCellsCount++;
                     }
+                     if (currentCell != nextGeneration[row, column])
+                    {
+                     IsGameActive = true;
+                    }
+
                 }
+            }
                 Grid = nextGeneration;
                 GenerationCount++;
-                Thread.Sleep(timeout);
-            }
+        }
+
         }
     }
 

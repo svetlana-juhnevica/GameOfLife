@@ -42,22 +42,97 @@ namespace GameOfLife
         /// <summary>
         /// Ask the user to enter the number of rows
         /// </summary>
+        /* public int AskForRows()
+         {
+             while (true)
+             {
+                 try
+                 {
+                     Console.WriteLine("Enter the number of Rows from 1 to 20 : ");  
+
+                     int rows = int.Parse(Console.ReadLine());
+                     if (rows < 0 || rows > 20)
+                     {
+                         Console.WriteLine("Please enter the number in the range");
+                     }
+                     else
+                     {
+                         return rows;
+                     }
+                 }
+                 catch (Exception e)
+                 {
+                     Console.WriteLine(e.Message);
+                 }
+             }*/
+        /// <summary>
+        /// Ask the user to enter the number of rows
+        /// </summary>
+        /* public int AskForColumns()
+         {
+             while (true)
+             {
+                 try
+                 {
+                     Console.WriteLine("Enter the number of Columns from 1 to 20 : ");  
+
+                     int columns = int.Parse(Console.ReadLine());
+                     if (columns < 0 || columns > 20)
+                     {
+                         Console.WriteLine("Please enter the number in the range");
+                     }
+                     else
+                     {
+                         return columns;
+                     }
+                 }
+                 catch (Exception e)
+                 {
+                     Console.WriteLine(e.Message);
+                 }
+             }*/
         public void AskForRows()
         {
-            Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
+            Console.WriteLine("Enter the number of Rows from 1 to 20 : ");  
+        }
+        public void AskForColumns()
+        {
+            Console.WriteLine("Enter the number of Columns from 1 to 20 : ");
         }
         /// <summary> 
         /// Ask the user to enter the number of columns 
         /// </summary> 
-        public void AskForColumns()
-        {
-           Console.WriteLine("Enter the number of Columns from 1 to 20: ");
-        }
+        /* public int AskForColumns()
+         {
 
-            /// <summary>
-            /// Warning if the entered input does not correspond to the requirements
-            /// </summary>
-            public void WarningOfWrongInput()
+               Console.WriteLine("Enter the number of Columns from 1 to 20: ");
+
+             while (true)
+             {
+                 try
+                 {
+                     Console.WriteLine("Enter the number of Columns from 1 to 20:");
+                     int columns = int.Parse(Console.ReadLine());
+                     if (columns < 0 || columns > 20)
+                     {
+                         Console.WriteLine("Please enter the number in the range");
+                     }
+                     else
+                     {
+                         return columns;
+                     }
+                 }
+                 catch (Exception e)
+                 {
+                     Console.WriteLine(e.Message);
+                 }*/
+
+
+
+        /// <summary>
+        /// Warning if the entered input does not correspond to the requirements
+        /// </summary>
+        public void WarningOfWrongInput()
         {
             Console.WriteLine("Your input is out of range. try again");
         }
@@ -98,6 +173,12 @@ namespace GameOfLife
             Console.Write(stringBuilder.ToString());
             Console.WriteLine("Generations: {0}", game.GenerationCount);
             Console.WriteLine("Alive cells: {0}", game.AliveCellsCount);
+        }
+        public void PauseGameOptions()
+        {
+            Console.WriteLine("To continue the game, press C : ");
+            Console.WriteLine("To quit the game, press Q : ");
+            Console.WriteLine("To save the game, press S : ");
         }
     }
 }
