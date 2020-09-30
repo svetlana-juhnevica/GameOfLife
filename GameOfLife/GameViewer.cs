@@ -22,23 +22,23 @@ namespace GameOfLife
         /// </summary>
         public void PrintGameOptions()
         {
-            Console.WriteLine("To continue the game, press C : ");
-            Console.WriteLine("To quit the game, press Q : ");
-            Console.WriteLine("To start a new game, press N : ");
+            Console.WriteLine("To start a new game, press 1: ");
+            Console.WriteLine("To load the previous game, press 2 : ");
+            Console.WriteLine("To quit the game, press 3 : ");
+            
         }
          /// <summary>
         /// Ask the user to enter the games to be displayed
         /// </summary>
            public int AskForGamesToDisplay()
         {
-            //GameId is the same as the number of the game in its list
-            int GameId;
-            Console.WriteLine("Enter the number of Games you would like to start (from 1 to 1000 : ");
-            while (!int.TryParse(Console.ReadLine(), out GameId) || GameId < 1 || GameId > 1000)
+            int gameNumber;
+            Console.WriteLine("Enter the number of Games you would like to display (from 1 to 1000). You can choose 8 games in total : ");
+            while (!int.TryParse(Console.ReadLine(), out gameNumber) || gameNumber < 1 || gameNumber > 1000)
             {
                 WarningOfWrongInput();
             }
-            return GameId;
+            return gameNumber;
         }
        
         /// <summary>
@@ -108,25 +108,26 @@ namespace GameOfLife
             }
             Console.BackgroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
-            Console.SetCursorPosition(0, 0);
-            Console.Clear();
+           // Console.SetCursorPosition(0, 0);
+           // Console.Clear();
             Console.Write(stringBuilder.ToString());
             Console.WriteLine("Generations: {0}", game.GenerationCount);
             Console.WriteLine("Alive cells: {0}", game.AliveCellsCount);
         }
+        /// <summary>
+        /// Options for the game when paused
+        /// </summary>
         public void PauseGameOptions()
         {
-            Console.WriteLine("To continue the game, press C : ");
-            Console.WriteLine("To quit the game, press Q : ");
+            Console.WriteLine("To continue the game, press C: ");
+            Console.WriteLine("To change the games to be displayed, press N : ");
             Console.WriteLine("To save the game, press S : ");
-            Console.WriteLine("To change the games to be displayed, press D : ");
-
+            Console.WriteLine("To quit the game, press Q: ");
         }
         public void PrintGames(List<Game> games, List<int> selectedGamesId)
-      {
-         Console.Clear();
+        {   
          foreach (int index in selectedGamesId)
-            {
+            {   Console.WriteLine("Game: {0}", index);
                 Game game = games[index - 1];
                 Print(game);
             }             
