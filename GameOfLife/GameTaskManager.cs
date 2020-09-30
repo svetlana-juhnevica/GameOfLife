@@ -9,19 +9,19 @@ namespace GameOfLife
     /// </summary>
     public class GameTaskManager
     {
-        private Game game;
+       // private Game game;
         private GameViewer gameViewer;
         private GameFileSaver gameFileSaver;
-        private List<Game> games;
-        //  private List<int> printedGames;
+        public List<Game> games;
+        public List<int> selectedGamesNumber;
         public static Timer timer;
-        public int GamesNumber;
+        
         ConsoleKeyInfo cki;
 
         public GameTaskManager()
         {
             games = new List<Game>();
-            game = new Game();
+            selectedGamesNumber = new List<int>();
             gameViewer = new GameViewer();
             gameFileSaver = new GameFileSaver();
         }
@@ -36,7 +36,12 @@ namespace GameOfLife
             /// User makes choice: to continue, quit or start a new game 
             while (true)
             {
-                string input = Console.ReadLine().ToLower();
+                string input = Console.ReadLine()?.ToLower();
+                //if not any key pressed, returns to the while loop
+                if (input == null)
+                {
+                    continue;
+                }
                 switch (input)
                 {
                     //if "quit" is pressed 
@@ -67,31 +72,30 @@ namespace GameOfLife
         /// </summary> 
         public void NewGame()
         {
-
-            game.RandomFillByChosenGridSize();
+           GenerateGames();
+           GamesForDisplaying();
+           // game.RandomFillByChosenGridSize();
             // Establish an event handler to process key press events.
             Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
             StartTimer();
 
         } 
-
-            
-
-           
+        /// <summary>
+        /// Set the Cancel property to true to prevent the process from terminating.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+  
        private void myHandler(object sender, ConsoleCancelEventArgs args)
             {
-                // Set the Cancel property to true to prevent the process from terminating.
-
                 args.Cancel = true;
                 timer.Enabled = false;
                 gameViewer.PauseGameOptions();
                 
             }
-          //  timer.Enabled = false;
-          //  Console.WriteLine("The game is over");
-         //   Environment.Exit(0);
-        
-
+          /// <summary>
+          /// Timer for each iteration to be updated in 1 second
+          /// </summary>
             public void StartTimer()
         {
             timer = new System.Timers.Timer();
@@ -100,11 +104,19 @@ namespace GameOfLife
             timer.AutoReset = true;
             timer.Enabled = true;
         }
+        /// <summary>
+        /// Timer event handler
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            game.CalculateNewCellStatus();
-            gameViewer.Print(game);
-            gameFileSaver.SaveGame(game);
+            // game.CalculateNewCellStatus();
+            //  gameViewer.Print(game);
+           //   gameFileSaver.SaveGame(game);
+               CalculateGamesNewCellStatus();
+               gameViewer.PrintGames(games, selectedGamesNumber);
+             //  gameFileSaver.SaveGames(games);
         }
         /// <summary> 
         /// A saved game continues to the next cycle 
@@ -128,18 +140,16 @@ namespace GameOfLife
             Environment.Exit(0);
         }
         /// <summary>
-        /// To generate games according to the user's chosen number of games
+        ///  Generates 1000 games according to the user's chosen gridsize
         /// </summary>
         public void GenerateGames()
-        { 
-            gameViewer.AskForGamesNumber();
-            while (!int.TryParse(Console.ReadLine(), out GamesNumber) || GamesNumber < 0 || GamesNumber > 1000)
+        {
+          int  rows = gameViewer.AskForRows();
+          int columns = gameViewer.AskForColumns();
+            for (int g = 0; g < 1000; g++)
             {
-                gameViewer.WarningOfWrongInput();
-            }
-            for (int g = 0; g < GamesNumber; g++)
-            {
-                game.RandomFillByChosenGridSize();
+                Game game = new Game(rows, columns);
+                game.Randomize();
                 games.Add(game);
             }
         }
@@ -153,6 +163,19 @@ namespace GameOfLife
                 game.CalculateNewCellStatus();
             }
         }
-    }
+        /// <summary>
+        /// Makes list of games numbers for displaying
+        /// </summary>
+        private void GamesForDisplaying()
+         { 
+            for(int i = 0; i<8; i++)
+            {
+                int number = gameViewer.AskForGamesToDisplay();
+                selectedGamesNumber.Add(number);
+            }
+        }
+       
+
+}
 }
 

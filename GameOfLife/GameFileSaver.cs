@@ -14,7 +14,7 @@ namespace GameOfLife
         private List<Game> games;
         public GameFileSaver()
         {
-          Game  game = new Game();
+          //Game  game = new Game();
           List<Game> games = new List<Game>();
         }
         /// <summary>

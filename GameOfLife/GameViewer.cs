@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GameOfLife
@@ -25,110 +26,49 @@ namespace GameOfLife
             Console.WriteLine("To quit the game, press Q : ");
             Console.WriteLine("To start a new game, press N : ");
         }
-        /// <summary>
-        /// Ask the user to enter the number of games he would like to generate
+         /// <summary>
+        /// Ask the user to enter the games to be displayed
         /// </summary>
-           public void AskForGamesNumber()
+           public int AskForGamesToDisplay()
         {
+            //GameId is the same as the number of the game in its list
+            int GameId;
             Console.WriteLine("Enter the number of Games you would like to start (from 1 to 1000 : ");
+            while (!int.TryParse(Console.ReadLine(), out GameId) || GameId < 1 || GameId > 1000)
+            {
+                WarningOfWrongInput();
+            }
+            return GameId;
         }
+       
         /// <summary>
         /// Ask the user to enter the number of rows
         /// </summary>
-        public void AskForGamesToDisplay()
+        public int AskForRows()
         {
-            Console.WriteLine("Enter which games you would like to display (not more than 8) : ");
+            int Rows;
+            Console.WriteLine("Enter the number of Rows from 1 to 20 : ");
+
+            while (!int.TryParse(Console.ReadLine(), out Rows) || Rows < 0 || Rows > 20)
+            {
+               WarningOfWrongInput();
+            }
+            return Rows;
         }
         /// <summary>
-        /// Ask the user to enter the number of rows
+        /// Ask the user to enter the number of columns
         /// </summary>
-        /* public int AskForRows()
-         {
-             while (true)
-             {
-                 try
-                 {
-                     Console.WriteLine("Enter the number of Rows from 1 to 20 : ");  
-
-                     int rows = int.Parse(Console.ReadLine());
-                     if (rows < 0 || rows > 20)
-                     {
-                         Console.WriteLine("Please enter the number in the range");
-                     }
-                     else
-                     {
-                         return rows;
-                     }
-                 }
-                 catch (Exception e)
-                 {
-                     Console.WriteLine(e.Message);
-                 }
-             }*/
-        /// <summary>
-        /// Ask the user to enter the number of rows
-        /// </summary>
-        /* public int AskForColumns()
-         {
-             while (true)
-             {
-                 try
-                 {
-                     Console.WriteLine("Enter the number of Columns from 1 to 20 : ");  
-
-                     int columns = int.Parse(Console.ReadLine());
-                     if (columns < 0 || columns > 20)
-                     {
-                         Console.WriteLine("Please enter the number in the range");
-                     }
-                     else
-                     {
-                         return columns;
-                     }
-                 }
-                 catch (Exception e)
-                 {
-                     Console.WriteLine(e.Message);
-                 }
-             }*/
-        public void AskForRows()
+        public int AskForColumns()
         {
-            Console.WriteLine("Enter the number of Rows from 1 to 20 : ");  
+           Console.WriteLine("Enter the number of Columns from 1 to 20 : ");
+           int Columns;
+            while (!int.TryParse(Console.ReadLine(), out Columns) || Columns < 0 || Columns > 20)
+            {
+                WarningOfWrongInput();
+            }
+            return Columns;
         }
-        public void AskForColumns()
-        {
-            Console.WriteLine("Enter the number of Columns from 1 to 20 : ");
-        }
-        /// <summary> 
-        /// Ask the user to enter the number of columns 
-        /// </summary> 
-        /* public int AskForColumns()
-         {
-
-               Console.WriteLine("Enter the number of Columns from 1 to 20: ");
-
-             while (true)
-             {
-                 try
-                 {
-                     Console.WriteLine("Enter the number of Columns from 1 to 20:");
-                     int columns = int.Parse(Console.ReadLine());
-                     if (columns < 0 || columns > 20)
-                     {
-                         Console.WriteLine("Please enter the number in the range");
-                     }
-                     else
-                     {
-                         return columns;
-                     }
-                 }
-                 catch (Exception e)
-                 {
-                     Console.WriteLine(e.Message);
-                 }*/
-
-
-
+     
         /// <summary>
         /// Warning if the entered input does not correspond to the requirements
         /// </summary>
@@ -179,6 +119,20 @@ namespace GameOfLife
             Console.WriteLine("To continue the game, press C : ");
             Console.WriteLine("To quit the game, press Q : ");
             Console.WriteLine("To save the game, press S : ");
+            Console.WriteLine("To change the games to be displayed, press D : ");
+
+        }
+        public void PrintGames(List<Game> games, List<int> selectedGamesId)
+      {
+         Console.Clear();
+         foreach (int index in selectedGamesId)
+            {
+                Game game = games[index - 1];
+                Print(game);
+            }             
+         //  Console.WriteLine("Alive games count: {0}", aliveGameCount);
+                         }
+
         }
     }
-}
+
