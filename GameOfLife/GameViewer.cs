@@ -22,9 +22,9 @@ namespace GameOfLife
         /// </summary>
         public void PrintGameOptions()
         {
-            Console.WriteLine("To start a new game, press N: ");
-            Console.WriteLine("To load the previous game, press C : ");
-            Console.WriteLine("To quit the game, press Q : ");
+            Console.WriteLine("To start a new game, press 1: ");
+            Console.WriteLine("To load the previous game, press 2 : ");
+            Console.WriteLine("To quit the game, press 3 : ");
             
         }
          /// <summary>
@@ -128,10 +128,10 @@ namespace GameOfLife
         /// </summary>
         public void PauseGameOptions()
         {
-            Console.WriteLine("To continue the game, press C: ");
-            Console.WriteLine("To change the games to be displayed, press D : ");
-            Console.WriteLine("To save the game, press S : ");
-            Console.WriteLine("To quit the game, press Q: ");
+            Console.WriteLine("To continue the game, press 1: ");
+            Console.WriteLine("To change the games to be displayed, press 2 : ");
+            Console.WriteLine("To save the game, press 3 : ");
+            Console.WriteLine("To quit the game, press 4: ");
         }
         /// <summary>
         /// Displays all selected games 
@@ -144,7 +144,8 @@ namespace GameOfLife
             {   Console.WriteLine("Game: {0}", index);
                 Game game = games[index - 1];
                 Print(game);
-            }             
+            }
+          Console.WriteLine(" ");
           Console.WriteLine("Alive games count: {0}", aliveGamesCount);
           Console.WriteLine("total alivecells count: {0}", totalAliveCellsCount);
         }

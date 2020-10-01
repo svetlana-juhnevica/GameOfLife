@@ -26,6 +26,9 @@ namespace GameOfLife
             Grid = new CellStatus[rows, columns];
             Randomize();
         }
+        // <summary> 
+        /// Randomly fills the grid with dead and alive cells 
+        /// </summary> 
         public void Randomize()
         {
             for (var row = 0; row < Rows; row++)

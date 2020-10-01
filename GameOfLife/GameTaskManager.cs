@@ -15,7 +15,7 @@ namespace GameOfLife
         public List<int> selectedGamesNumber;
         public static Timer timer;
         ConsoleKeyInfo cki;
-        private int aliveGamesCount; 
+        private int aliveGamesCount;
         private int totalAliveCellsCount;
         public int gamesCount;
 
@@ -36,83 +36,77 @@ namespace GameOfLife
             gameViewer.PrintGameOptions();
 
             /// User makes choice: to continue, quit or start a new game 
-                while (true)
-                {
-                /* string input = Console.ReadLine()?.ToLower();
-                 //if not any key pressed, returns to the while loop 
-                 if (input == null)
-                 {
-                     continue;
-                 }*/
-              int  input = int.Parse(Console.ReadLine());
-                    switch (input)
-                    {
-                        // if "start the game" is pressed  
-                        case 1:
-                            NewGame();
-                            break;
-                        // if "continue the game" is pressed  
-                        case 2:
-                            ContinueGame();
-                            break;
-                        //if "quit" is pressed  
-                        case 3:
-                        gameFileSaver.SaveGames(games);
-                        Environment.Exit(0);
-                            break;
-                  /*  //if "change the games to be displayed" is pressed  
-                    case "d":
-                        ChangeGamesForDisplaying();
-                        break;*/
-
-                    // if unknown command is pressed  
-                    default:
-                            gameViewer.WarningOfWrongCommand();
-                            break;
-                    }
-                }
+            /* while (true)
+             {
+               string input = Console.ReadLine()?.ToLower();
+               //if not any key pressed, returns to the while loop 
+               if (input == null)
+               {
+                   continue;
+               }*/
+            int command = int.Parse(Console.ReadLine());
+            switch (command)
+            {
+                // if "start the game" is pressed  
+                case 1:
+                    NewGame();
+                    break;
+                // if "continue the game" is pressed  
+                case 2:
+                    ContinueGame();
+                    break;
+                //if "quit" is pressed  
+                case 3:
+                    gameFileSaver.SaveGames(games);
+                    Environment.Exit(0);
+                    break;
+                // if unknown command is pressed  
+                default:
+                    gameViewer.WarningOfWrongCommand();
+                    break;
+                    //   }
             }
+        }
 
-            /// <summary> 
-            /// A new game undergoes the full cycle 
-            /// </summary> 
-            public void NewGame()
+        /// <summary> 
+        /// A new game undergoes the full cycle 
+        /// </summary> 
+        public void NewGame()
         {
-           GenerateGames();
-           GamesForDisplaying();
+            GenerateGames();
+            GamesForDisplaying();
 
             // Establish an event handler to process key press events.
             Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
-            while (true)
-            {
-                StartTimer();
-            }
-         } 
+            StartTimer();
+        }
+    
 
-        /// <summary>
-        /// Set the Cancel property to true to prevent the process from terminating.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-       private void myHandler(object sender, ConsoleCancelEventArgs args)
+/// <summary>
+/// Set the Cancel property to true to prevent the process from terminating.
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="args"></param>
+        private void myHandler(object sender, ConsoleCancelEventArgs args)
             {
                 args.Cancel = true;
                 timer.Enabled = false;
-               // timer.Elapsed -= OnTimedEvent;
+                timer.Elapsed -= OnTimedEvent;
                 PauseGame();
             }
         public void PauseGame()
         {
+            Console.CancelKeyPress -= new ConsoleCancelEventHandler(myHandler);
             gameViewer.PauseGameOptions();
-            while (true)
-            {
-                /* string input = Console.ReadLine()?.ToLower();
-                 //if not any key pressed, returns to the while loop 
-                 if (input == null)
-                 {
-                     continue;
-                 }*/
-                int input = int.Parse(Console.ReadLine());
+            /* while (true)
+           //  {
+                  string input = Console.ReadLine()?.ToLower();
+                  //if not any key pressed, returns to the while loop 
+                  if (input == null)
+                  {
+                      continue;
+                  }*/
+            int input = int.Parse(Console.ReadLine());
                 switch (input)
                 {
                    // if "continue the game" is pressed  
@@ -136,8 +130,9 @@ namespace GameOfLife
                     default:
                         gameViewer.WarningOfWrongCommand();
                         break;
-                }
+              //  }
             }
+
         }
             /// <summary>
             /// Timer for each iteration to be updated in 1 second
@@ -159,7 +154,7 @@ namespace GameOfLife
         {
                CalculateGamesNewCellStatus();
                gameViewer.PrintGames(games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
-               gameFileSaver.SaveGames(games);
+             //  gameFileSaver.SaveGames(games);
         }
         /// <summary> 
         /// A loaded game continues to the next cycle 
@@ -173,10 +168,7 @@ namespace GameOfLife
                 NewGame();
             }
             Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);
-            while (true)
-            {
-                StartTimer();
-            }
+            StartTimer();
         }
         /// <summary>
         ///  Generates games according to the user's chosen gridsize and count of games
