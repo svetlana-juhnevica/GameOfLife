@@ -22,9 +22,9 @@ namespace GameOfLife
         /// </summary>
         public void PrintGameOptions()
         {
-            Console.WriteLine("To start a new game, press 1: ");
-            Console.WriteLine("To load the previous game, press 2 : ");
-            Console.WriteLine("To quit the game, press 3 : ");
+            Console.WriteLine("To start a new game, press N: ");
+            Console.WriteLine("To load the previous game, press C : ");
+            Console.WriteLine("To quit the game, press Q : ");
             
         }
          /// <summary>
@@ -33,14 +33,23 @@ namespace GameOfLife
            public int AskForGamesToDisplay()
         {
             int gameNumber;
-            Console.WriteLine("Enter the number of Games you would like to display (from 1 to 1000). You can choose 8 games in total : ");
+            Console.WriteLine("Enter the number of the game you would like to display (from 1 to 1000). You can choose 8 games in total : ");
             while (!int.TryParse(Console.ReadLine(), out gameNumber) || gameNumber < 1 || gameNumber > 1000)
             {
                 WarningOfWrongInput();
             }
             return gameNumber;
         }
-       
+        public int AskForGamesCount()
+        {
+            int gamesCount;
+            Console.WriteLine("Enter the number of  games you would like to generate (from 1 to 1000). You can choose 8 games in total : ");
+            while (!int.TryParse(Console.ReadLine(), out gamesCount) || gamesCount < 1 || gamesCount > 1000)
+            {
+                WarningOfWrongInput();
+            }
+            return gamesCount;
+        }
         /// <summary>
         /// Ask the user to enter the number of rows
         /// </summary>
@@ -120,19 +129,25 @@ namespace GameOfLife
         public void PauseGameOptions()
         {
             Console.WriteLine("To continue the game, press C: ");
-            Console.WriteLine("To change the games to be displayed, press N : ");
+            Console.WriteLine("To change the games to be displayed, press D : ");
             Console.WriteLine("To save the game, press S : ");
             Console.WriteLine("To quit the game, press Q: ");
         }
-        public void PrintGames(List<Game> games, List<int> selectedGamesId)
+        /// <summary>
+        /// Displays all selected games 
+        /// </summary>
+        /// <param name="games"></param>
+        /// <param name="selectedGamesId"></param>
+        public void PrintGames(List<Game> games, List<int> selectedGamesId, int aliveGamesCount, int totalAliveCellsCount)
         {   
          foreach (int index in selectedGamesId)
             {   Console.WriteLine("Game: {0}", index);
                 Game game = games[index - 1];
                 Print(game);
             }             
-         //  Console.WriteLine("Alive games count: {0}", aliveGameCount);
-                         }
+          Console.WriteLine("Alive games count: {0}", aliveGamesCount);
+          Console.WriteLine("total alivecells count: {0}", totalAliveCellsCount);
+        }
 
         }
     }

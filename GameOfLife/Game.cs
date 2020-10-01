@@ -16,6 +16,7 @@ namespace GameOfLife
         public CellStatus[,] Grid;
         public int GenerationCount;
         public int AliveCellsCount;
+        public bool IsGameAlive { get; set;}
         private GameViewer gameViewer = new GameViewer();
         //  public List<Game> games = new List<Game>();
         public Game(int rows, int columns)
@@ -32,6 +33,10 @@ namespace GameOfLife
                 for (var column = 0; column < Columns; column++)
                 {
                     Grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
+                    if (Grid[row, column] == CellStatus.Alive)
+                    {
+                        AliveCellsCount++;
+                    }
                 }
             }
         }
@@ -64,7 +69,7 @@ namespace GameOfLife
         /// </summary> 
         public void CalculateNewCellStatus()
         {
-            bool IsGameAlive = false;
+            IsGameAlive = false;
             AliveCellsCount = 0;
             var nextGeneration = new CellStatus[Rows, Columns];
             // Loop through every cell  
