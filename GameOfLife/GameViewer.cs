@@ -28,27 +28,45 @@ namespace GameOfLife
             
         }
          /// <summary>
-        /// Ask the user to enter the games to be displayed
+        /// Ordinal number of the games to be displayed
         /// </summary>
            public int AskForGamesToDisplay()
         {
             int gameNumber;
-            Console.WriteLine("Enter the number of the game you would like to display (from 1 to 1000). You can choose 8 games in total : ");
+            Console.WriteLine("Enter the number of the game you would like to display (from 1 to 1000), not more than you generated: ");
             while (!int.TryParse(Console.ReadLine(), out gameNumber) || gameNumber < 1 || gameNumber > 1000)
             {
                 WarningOfWrongInput();
             }
             return gameNumber;
         }
+        /// <summary>
+        /// Number of the games to be generated
+        /// </summary>
+        /// <returns></returns>
         public int AskForGamesCount()
         {
             int gamesCount;
-            Console.WriteLine("Enter the number of  games you would like to generate (from 1 to 1000). You can choose 8 games in total : ");
+            Console.WriteLine("Enter the number of  games you would like to generate (from 1 to 1000): ");
             while (!int.TryParse(Console.ReadLine(), out gamesCount) || gamesCount < 1 || gamesCount > 1000)
             {
                 WarningOfWrongInput();
             }
             return gamesCount;
+        }
+        /// <summary>
+        /// Number of the games to be displayed
+        /// </summary>
+        /// <returns></returns>
+        public int AskForDisplayedGamesCount()
+        {
+            int displayedGamesCount;
+            Console.WriteLine("Enter the number of  games you would like to be displayed (from 1 to 8): ");
+            while (!int.TryParse(Console.ReadLine(), out displayedGamesCount) || displayedGamesCount < 1 || displayedGamesCount > 8)
+            {
+                WarningOfWrongInput();
+            }
+            return displayedGamesCount;
         }
         /// <summary>
         /// Ask the user to enter the number of rows
