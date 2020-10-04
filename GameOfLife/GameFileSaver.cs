@@ -6,59 +6,69 @@ using System.IO;
 namespace GameOfLife
 {
     /// <summary> 
-   /// A class to save the game to the file and load it from the file
-   /// </summary> 
+    /// A class to save the game to the file and load it from the file
+    /// </summary> 
     public class GameFileSaver
     {
-        private Game game;
-        private List<Game> games;
-        public GameFileSaver()
-        {
-          //Game  game = new Game();
-          List<Game> games = new List<Game>();
-        }
         /// <summary>
         /// Save the game to the file
         /// </summary>
         /// <param name="GameModel"></param>
-      public void SaveGame(Game game)
-         {
-             var jsonString = JsonConvert.SerializeObject(game);
-             File.WriteAllText("GameOfLife.json", jsonString);
-         }
+        public void SaveGame(Game game)
+        {
+            var jsonString = JsonConvert.SerializeObject(game);
+            File.WriteAllText("GameOfLife.json", jsonString);
+        }
+
         /// <summary>
         /// Load the game from the file
         /// </summary>
         public Game LoadGame()
-         {
-            try { 
-                 var jsonString = File.ReadAllText("GameOfLife.json");
-                 var game = JsonConvert.DeserializeObject<Game>(jsonString);
-                 return game;
-             }
+        {
+            try
+            {
+                var jsonString = File.ReadAllText("GameOfLife.json");
+                var game = JsonConvert.DeserializeObject<Game>(jsonString);
+                return game;
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return null;
-            }  
             }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameModel"></param>
         public void SaveGames(List<Game> games)
         {
-            foreach(Game game in games)
+            try
             {
-                SaveGame(game);
+                var jsonString = JsonConvert.SerializeObject(games);
+                File.WriteAllText("GameOfLife.json", jsonString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
-        public List<Game> LoadGames()
-        {
-            foreach(Game game in games)
-            {
-                LoadGame();
-                games.Add(game);
-            }
-            return games;
-        }
+
+         public List<Game> LoadGames()
+         {
+              try
+              {
+                  var jsonString = File.ReadAllText("GameOfLife.json");
+                  var games = JsonConvert.DeserializeObject<List<Game>>(jsonString);
+                  return games;
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e.Message);
+                  return null;
+              }
          }
+    }
 }
 
 

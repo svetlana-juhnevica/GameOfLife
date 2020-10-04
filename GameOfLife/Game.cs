@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Threading;
 
 namespace GameOfLife
 {
@@ -16,9 +15,10 @@ namespace GameOfLife
         public CellStatus[,] Grid;
         public int GenerationCount;
         public int AliveCellsCount;
-        public bool IsGameAlive { get; set;}
+        public List<Game> games;
+        public bool IsGameAlive { get; set; }
         private GameViewer gameViewer = new GameViewer();
-        //  public List<Game> games = new List<Game>();
+       
         public Game(int rows, int columns)
         {
             Rows = rows;
@@ -26,6 +26,7 @@ namespace GameOfLife
             Grid = new CellStatus[rows, columns];
             Randomize();
         }
+
         // <summary> 
         /// Randomly fills the grid with dead and alive cells 
         /// </summary> 
@@ -43,29 +44,6 @@ namespace GameOfLife
                 }
             }
         }
-        /*
-                /// <summary> 
-                /// Randomly fills the grid according to user's choice of grid size 
-                /// </summary> 
-                public void RandomFillByChosenGridSize()
-                {
-                    Rows = gameViewer.AskForRows();
-                    Columns = gameViewer.AskForColumns();
-                    Grid = new CellStatus[Rows, Columns];
-                    GenerationCount = 1;
-                    AliveCellsCount = 0;
-                    for (var row = 0; row < Rows; row++)
-                    {
-                        for (var column = 0; column < Columns; column++)
-                        {
-                            Grid[row, column] = (CellStatus)RandomNumberGenerator.GetInt32(0, 2);
-                            if (Grid[row, column] == CellStatus.Alive)
-                            {
-                                AliveCellsCount++;
-                            }
-                        }
-                    }
-                }*/
 
         /// <summary> 
         /// Checks the neighbours around the cell, their status and changes it according to the rules 
@@ -133,12 +111,12 @@ namespace GameOfLife
             GenerationCount++;
         }
     }
-    }
+}
 
 
-    
 
-    
+
+
 
 
 

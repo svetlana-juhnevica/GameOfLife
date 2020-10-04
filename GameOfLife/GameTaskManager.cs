@@ -11,10 +11,13 @@ namespace GameOfLife
     {
         private GameViewer gameViewer = new GameViewer();
         private GameFileSaver gameFileSaver = new GameFileSaver();
-        public List<Game> games= new List<Game>();
-        public List<int> selectedGamesNumber= new List<int>();
-        public static Timer timer;
-        ConsoleKeyInfo cki;
+        private List<Game> games = new List<Game>();
+        private List<int> selectedGamesNumber = new List<int>();
+        private Timer timer;
+        /// <summary> 
+        /// The status of the game whether the game is running. 
+        /// </summary> 
+        public bool Running;
         /// <summary>
         /// Number of all alive games
         /// </summary>
@@ -35,11 +38,27 @@ namespace GameOfLife
         /// Number of games to be displayed
         /// </summary>
         public int displayedGamesCount;
+       
+        /// <summary> 
+        /// Run game. 
+        /// </summary> 
+        public void Run()
+        {
+            Running = true;
 
-    /// <summary>
-    /// The game starts with introduction and options to choose the game task
-    /// </summary>
-    public void StartGame()
+            StartGame();
+
+            while (Running)
+            {
+                System.Threading.Thread.Sleep(1000);
+            }
+        }
+
+
+        /// <summary>
+        /// The game starts with introduction and options to choose the game task
+        /// </summary>
+        public void StartGame()
         {
             gameViewer.PrintGameIntro();
             gameViewer.PrintGameOptions();
@@ -59,7 +78,7 @@ namespace GameOfLife
                 //if "quit" is pressed  
                 case 3:
                     gameFileSaver.SaveGames(games);
-                    Environment.Exit(0);
+                    PauseGame();
                     break;
                 // if unknown command is pressed  
                 default:
@@ -76,18 +95,19 @@ namespace GameOfLife
             GenerateGames();
             GamesForDisplaying();
 
-            // Establish an event handler to process key press events.
-           Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler);  
+            /// Establish an event handler to process key press events.
+            gameViewer.GamePaused += Pause;
             StartTimer();
         }
+
         /// <summary>
         /// Set the Cancel property to true to prevent the process from terminating.
         /// </summary> 
-        private void myHandler(object sender, ConsoleCancelEventArgs args)
+        private void Pause()
         {
-            args.Cancel = true;
-            timer.Enabled = false;
             timer.Elapsed -= OnTimedEvent;
+            gameViewer.GamePaused -= Pause;
+            timer.Enabled = false;
             PauseGame();
         }
 
@@ -98,35 +118,49 @@ namespace GameOfLife
         {
             gameViewer.PauseGameOptions();
             int input = int.Parse(Console.ReadLine());
-                switch (input)
-                {
-                   // if "continue the game" is pressed  
-                    case 1:
-                        ContinueGame();
-                        break;
-                  //if "change the games to be displayed" is pressed  
-                    case 2:
-                       ChangeGamesForDisplaying();
-                        break;
-                    //if "save" is pressed  
-                    case 3:
-                        gameFileSaver.SaveGames(games);
-                        break;
-                    //if "quit" is pressed  
-                    case 4:
-                        Environment.Exit(0);
-                        break;
-                    
-                    // if unknown command is pressed  
-                    default:
-                        gameViewer.WarningOfWrongCommand();
-                        break;
+            switch (input)
+            {
+                // if "continue the game" is pressed  
+                case 1:
+                    ContinuePausedGame();
+                    break;
+                //if "change the games to be displayed" is pressed  
+                case 2:
+                    ChangeGamesForDisplaying();
+                    break;
+                //if "save" is pressed  
+                case 3:
+                    gameFileSaver.SaveGames(games);
+                    PauseGame();
+                    break;
+                //if "continue saved game" is pressed  
+                case 4:
+                    ContinueGame();
+                    break;
+                //if "quit" is pressed  
+                case 5:
+                    Environment.Exit(0);
+                    Running = false;
+                    break;
+                // if unknown command is pressed  
+                default:
+                    gameViewer.WarningOfWrongCommand();
+                    break;
             }
         }
-            /// <summary>
-            /// Timer for each iteration to be updated in 1 second
-            /// </summary>
-            public void StartTimer()
+        /// <summary> 
+        /// Continues previous game after pause. 
+        /// </summary> 
+        private void ContinuePausedGame()
+        {
+            gameViewer.GamePaused += Pause;
+            StartTimer();
+        }
+
+        /// <summary>
+        /// Timer for each iteration to be updated in 1 second
+        /// </summary>
+        public void StartTimer()
         {
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
@@ -134,6 +168,7 @@ namespace GameOfLife
             timer.AutoReset = true;
             timer.Enabled = true;
         }
+
         /// <summary>
         /// Timer event handler
         /// </summary>
@@ -141,31 +176,34 @@ namespace GameOfLife
         /// <param name="e"></param>
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-               CalculateGamesNewCellStatus();
-               gameViewer.PrintGames(games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
+            CalculateGamesNewCellStatus();
+            gameViewer.PrintGames(games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
         }
+
         /// <summary> 
         /// A loaded game continues to the next cycle 
         /// </summary> 
         public void ContinueGame()
         {
-            var games = gameFileSaver.LoadGame();
+            var games = gameFileSaver.LoadGames();
             if (games == null)
             {
                 gameViewer.WarningOfNoSavedGame();
                 NewGame();
             }
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler); 
+            GamesForDisplaying();
+            gameViewer.GamePaused += Pause;
             StartTimer();
         }
+
         /// <summary>
         ///  Generates games according to the user's chosen gridsize and count of games
         /// </summary>
         public void GenerateGames()
         {
-          gamesCount = gameViewer.AskForGamesCount();
-          int  rows = gameViewer.AskForRows();
-          int columns = gameViewer.AskForColumns();
+            gamesCount = gameViewer.AskForGamesCount();
+            int rows = gameViewer.AskForRows();
+            int columns = gameViewer.AskForColumns();
             for (int g = 0; g < gamesCount; g++)
             {
                 Game game = new Game(rows, columns);
@@ -174,6 +212,7 @@ namespace GameOfLife
                 totalAliveCellsCount += game.AliveCellsCount;
             }
         }
+
         /// <summary>
         /// Calculates next generation grid for generated games
         /// </summary>
@@ -191,26 +230,29 @@ namespace GameOfLife
                 }
             }
         }
+
         /// <summary>
         /// Makes list of games numbers for displaying
         /// </summary>
         private void GamesForDisplaying()
-         {
+        {
             displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
-            for(int i = 0; i< displayedGamesCount; i++)
+            for (int i = 0; i < displayedGamesCount; i++)
             {
                 int number = gameViewer.AskForGamesToDisplay();
                 selectedGamesNumber.Add(number);
             }
         }
+
+        /// <summary>
+        /// The user changes the games to be displayed
+        /// </summary>
         private void ChangeGamesForDisplaying()
         {
             GamesForDisplaying();
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(myHandler); 
-            StartTimer();    
+            gameViewer.GamePaused += Pause;
+            StartTimer();
         }
-
-
     }
 }
 
