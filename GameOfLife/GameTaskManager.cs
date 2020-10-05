@@ -5,130 +5,254 @@ using System.Timers;
 namespace GameOfLife
 {
     /// <summary> 
-   /// Class for managing tasks:start a new game, continue or exit. 
-  /// </summary>
+    /// Class for managing tasks:start a new game, continue or exit. 
+    /// </summary>
     public class GameTaskManager
+    {
+        private GameViewer gameViewer = new GameViewer();
+        private GameFileSaver gameFileSaver = new GameFileSaver();
+        private List<Game> games = new List<Game>();
+        private List<int> selectedGamesNumber = new List<int>();
+        private Timer timer;
+        /// <summary> 
+        /// The status of the game whether the game is running. 
+        /// </summary> 
+        public bool Running;
+        /// <summary>
+        /// Number of all alive games
+        /// </summary>
+        private int aliveGamesCount;
+        /// <summary>
+        /// Number of all alive cells in the game
+        /// </summary>
+        private int totalAliveCellsCount;
+        /// <summary>
+        /// Number of generated games
+        /// </summary>
+        public int gamesCount;
+        /// <summary>
+        /// Ordinal Number of the game to be displayed
+        /// </summary>
+        public int gameNumber;
+        /// <summary>
+        /// Number of games to be displayed
+        /// </summary>
+        public int displayedGamesCount;
+       
+        /// <summary> 
+        /// Run game. 
+        /// </summary> 
+        public void Run()
         {
-            private Game game;
-            private GameViewer gameViewer;
-            private GameFileSaver gameFileSaver;
-            private List<Game> games = new List<Game>();
-            public static Timer timer;
-            public int GamesNumber;
-        public GameTaskManager()
+            Running = true;
+
+            StartGame();
+
+            while (Running)
             {
-                game = new Game();
-                gameViewer = new GameViewer();
-                gameFileSaver = new GameFileSaver();
+                System.Threading.Thread.Sleep(1000);
             }
-            /// <summary>
-            /// The game starts with introduction and options to choose the game task
-            /// </summary>
-            public void StartGame()
+        }
+
+
+        /// <summary>
+        /// The game starts with introduction and options to choose the game task
+        /// </summary>
+        public void StartGame()
+        {
+            gameViewer.PrintGameIntro();
+            gameViewer.PrintGameOptions();
+
+            /// User makes choice: to continue, quit or start a new game 
+            int command = int.Parse(Console.ReadLine());
+            switch (command)
             {
-                gameViewer.PrintGameIntro();
-                gameViewer.PrintGameOptions();
-               
-                /// User makes choice: to continue, quit or start a new game 
-                while (true)
-                {
-                    string input = Console.ReadLine().ToLower();
-                    switch (input)
-                    {
-                        //if "quit" is pressed 
-                        case "q":
-                            Environment.Exit(0);
-                            break;
-
-                        //if "start a new game" is pressed 
-                        case "n":
-                            NewGame();
-                            break;
-
-                        // if "continue the game" is pressed 
-                        case "c":
-                            ContinueGame();
-                            break;
-
-                        // if unknown command is pressed 
-                        default:
-                        gameViewer.WarningOfWrongCommand();
-                            break;
-                    }
-                }
+                // if "start the game" is pressed  
+                case 1:
+                    NewGame();
+                    break;
+                // if "continue the game" is pressed  
+                case 2:
+                    ContinueGame();
+                    break;
+                //if "quit" is pressed  
+                case 3:
+                    gameFileSaver.SaveGames(games);
+                    PauseGame();
+                    break;
+                // if unknown command is pressed  
+                default:
+                    gameViewer.WarningOfWrongCommand();
+                    break;
             }
+        }
 
         /// <summary> 
         /// A new game undergoes the full cycle 
         /// </summary> 
         public void NewGame()
         {
-            gameViewer.AskForGamesCount();
-            while (!int.TryParse(Console.ReadLine(), out GamesNumber) || GamesNumber < 0 || GamesNumber > 1000)
-            {
-                gameViewer.WarningOfWrongInput();
-            }
-            for (int i = 0; i < GamesNumber; i++)
-            {
-                game.RandomFillByChosenGridSize();
+            GenerateGames();
+            GamesForDisplaying();
 
-                ///The Game is running until Ctrl + C is pressed 
-               StartTimer(); 
-                do
-                {
-                    while (!Console.KeyAvailable)
-                    {
-                         
-                      //  gameViewer.Print(game);
-                      //  game.CalculateNewCellStatus();
-                      //  gameFileSaver.SaveGame(game);
-                    }
+            /// Establish an event handler to process key press events.
+            gameViewer.GamePaused += Pause;
+            StartTimer();
+        }
 
-                } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-                timer.Enabled = false;
-                Environment.Exit(0);
+        /// <summary>
+        /// Set the Cancel property to true to prevent the process from terminating.
+        /// </summary> 
+        private void Pause()
+        {
+            timer.Elapsed -= OnTimedEvent;
+            gameViewer.GamePaused -= Pause;
+            timer.Enabled = false;
+            PauseGame();
+        }
+
+        /// <summary>
+        /// User makes choice what to do when the game is paused
+        /// </summary>
+        public void PauseGame()
+        {
+            gameViewer.PauseGameOptions();
+            int input = int.Parse(Console.ReadLine());
+            switch (input)
+            {
+                // if "continue the game" is pressed  
+                case 1:
+                    ContinuePausedGame();
+                    break;
+                //if "change the games to be displayed" is pressed  
+                case 2:
+                    ChangeGamesForDisplaying();
+                    break;
+                //if "save" is pressed  
+                case 3:
+                    gameFileSaver.SaveGames(games);
+                    PauseGame();
+                    break;
+                //if "continue saved game" is pressed  
+                case 4:
+                    ContinueGame();
+                    break;
+                //if "quit" is pressed  
+                case 5:
+                    Environment.Exit(0);
+                    Running = false;
+                    break;
+                // if unknown command is pressed  
+                default:
+                    gameViewer.WarningOfWrongCommand();
+                    break;
             }
         }
-            public void StartTimer()
-            {
-                timer = new System.Timers.Timer();
-                timer.Interval = 1000;
-                timer.Elapsed += OnTimedEvent;
-                timer.AutoReset = true;
-                timer.Enabled = true;
-            }
-            public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-            {
-                game.CalculateNewCellStatus();
-                gameViewer.Print(game);
-                gameFileSaver.SaveGame(game);
-            }
+        /// <summary> 
+        /// Continues previous game after pause. 
+        /// </summary> 
+        private void ContinuePausedGame()
+        {
+            gameViewer.GamePaused += Pause;
+            StartTimer();
+        }
+
+        /// <summary>
+        /// Timer for each iteration to be updated in 1 second
+        /// </summary>
+        public void StartTimer()
+        {
+            timer = new System.Timers.Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Timer event handler
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            CalculateGamesNewCellStatus();
+            gameViewer.PrintGames(games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
+        }
 
         /// <summary> 
-        /// A saved game continues to the next cycle 
+        /// A loaded game continues to the next cycle 
         /// </summary> 
         public void ContinueGame()
+        {
+            var games = gameFileSaver.LoadGames();
+            if (games == null)
             {
-                var game= gameFileSaver.LoadGame();
-                if (game == null)
-                {
                 gameViewer.WarningOfNoSavedGame();
-                    NewGame();
-                }
-                do
-                {
-                    while (!Console.KeyAvailable)
-                    {
-                       // StartTimer();
-                       gameViewer.Print(game);
-                       game.CalculateNewCellStatus();
-                       gameFileSaver.SaveGame(game);
-                     }
+                NewGame();
+            }
+            GamesForDisplaying();
+            gameViewer.GamePaused += Pause;
+            StartTimer();
+        }
 
-                } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-                timer.Enabled = false;
-                Environment.Exit(0);
+        /// <summary>
+        ///  Generates games according to the user's chosen gridsize and count of games
+        /// </summary>
+        public void GenerateGames()
+        {
+            gamesCount = gameViewer.AskForGamesCount();
+            int rows = gameViewer.AskForRows();
+            int columns = gameViewer.AskForColumns();
+            for (int g = 0; g < gamesCount; g++)
+            {
+                Game game = new Game(rows, columns);
+                game.Randomize();
+                games.Add(game);
+                totalAliveCellsCount += game.AliveCellsCount;
             }
         }
+
+        /// <summary>
+        /// Calculates next generation grid for generated games
+        /// </summary>
+        public void CalculateGamesNewCellStatus()
+        {
+            totalAliveCellsCount = 0;
+            aliveGamesCount = 0;
+            foreach (Game game in games)
+            {
+                game.CalculateNewCellStatus();
+                totalAliveCellsCount += game.AliveCellsCount;
+                if (game.IsGameAlive)
+                {
+                    aliveGamesCount++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Makes list of games numbers for displaying
+        /// </summary>
+        private void GamesForDisplaying()
+        {
+            displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
+            for (int i = 0; i < displayedGamesCount; i++)
+            {
+                int number = gameViewer.AskForGamesToDisplay();
+                selectedGamesNumber.Add(number);
+            }
+        }
+
+        /// <summary>
+        /// The user changes the games to be displayed
+        /// </summary>
+        private void ChangeGamesForDisplaying()
+        {
+            GamesForDisplaying();
+            gameViewer.GamePaused += Pause;
+            StartTimer();
+        }
     }
+}
 
