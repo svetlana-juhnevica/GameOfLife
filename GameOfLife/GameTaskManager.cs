@@ -75,10 +75,14 @@ namespace GameOfLife
                 case 2:
                     ContinueGame();
                     break;
-                //if "quit" is pressed  
+                //if "save the game" is pressed  
                 case 3:
                     gameFileSaver.SaveGames(games);
                     PauseGame();
+                    break;
+                //if "quit the game" is pressed  
+                case 4:
+                   Environment.Exit(0);
                     break;
                 // if unknown command is pressed  
                 default:

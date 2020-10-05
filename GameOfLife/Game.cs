@@ -10,13 +10,44 @@ namespace GameOfLife
     /// </summary> 
     public class Game
     {
+        /// <summary>
+        /// Number of rows in the grid
+        /// </summary>
         public int Rows;
+
+        /// <summary>
+        /// Number of columns in the grid
+        /// </summary>
         public int Columns;
+
+        /// <summary>
+        /// The grid with dead and alive cells
+        /// </summary>
         public CellStatus[,] Grid;
+
+        /// <summary>
+        /// Number of generations in the game
+        /// </summary>
         public int GenerationCount;
+
+        /// <summary>
+        /// Number of alive cells in the grid
+        /// </summary>
         public int AliveCellsCount;
+
+        /// <summary>
+        /// List of generated games
+        /// </summary>
         public List<Game> games;
+
+        /// <summary>
+        /// Status of the game according to the changing cells in its grid
+        /// </summary>
         public bool IsGameAlive { get; set; }
+
+        /// <summary>
+        /// New instance for the game
+        /// </summary>
         private GameViewer gameViewer = new GameViewer();
        
         public Game(int rows, int columns)
