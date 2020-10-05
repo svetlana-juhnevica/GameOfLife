@@ -200,13 +200,34 @@ namespace GameOfLife
         /// <summary>
         /// Options for the game when paused
         /// </summary>
-        public void PauseGameOptions()
+        public PausedGameMenu PauseGameOptions()
         {
-            Console.WriteLine("To continue the game, press 1: ");
-            Console.WriteLine("To change the games to be displayed, press 2 : ");
-            Console.WriteLine("To save the game, press 3 : ");
-            Console.WriteLine("To continue the saved game, press 4 : ");
-            Console.WriteLine("To quit the game, press 5: ");
+            while (true)
+            {
+                Console.WriteLine("To continue the game, press 1: ");
+                Console.WriteLine("To change the games to be displayed, press 2 : ");
+                Console.WriteLine("To save the game, press 3 : ");
+                Console.WriteLine("To continue the saved game, press 4 : ");
+                Console.WriteLine("To quit the game, press 5: ");
+
+                var option = Console.ReadLine();
+                switch (option)
+                {
+                    case "1":
+                        return PausedGameMenu.ContinuePausedGame;
+                    case "2":
+                        return PausedGameMenu.ChangeGamesForDisplaying;
+                    case "3":
+                        return PausedGameMenu.SaveGame;
+                    case "4":
+                        return PausedGameMenu.ContinueSavedGame;
+                    case "5":
+                        return PausedGameMenu.Exit;
+                    default:
+                        WarningOfWrongCommand();
+                        break;
+                }
+            }
         }
 
         /// <summary>

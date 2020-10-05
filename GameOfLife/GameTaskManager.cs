@@ -119,29 +119,29 @@ namespace GameOfLife
         /// </summary>
         public void PauseGame()
         {
-            gameViewer.PauseGameOptions();
-            int input = int.Parse(Console.ReadLine());
+            PausedGameMenu input = gameViewer.PauseGameOptions();
+            
             switch (input)
             {
                 // if "continue the game" is pressed  
-                case 1:
+                case PausedGameMenu.ContinuePausedGame:
                     ContinuePausedGame();
                     break;
                 //if "change the games to be displayed" is pressed  
-                case 2:
+                case PausedGameMenu.ChangeGamesForDisplaying:
                     ChangeGamesForDisplaying();
                     break;
                 //if "save" is pressed  
-                case 3:
+                case PausedGameMenu.SaveGame:
                     gameFileSaver.SaveGames(games);
                     PauseGame();
                     break;
                 //if "continue saved game" is pressed  
-                case 4:
+                case PausedGameMenu.ContinueSavedGame:
                     ContinueGame();
                     break;
                 //if "quit" is pressed  
-                case 5:
+                case PausedGameMenu.Exit:
                     Environment.Exit(0);
                     Running = false;
                     break;
