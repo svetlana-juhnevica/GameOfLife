@@ -61,27 +61,26 @@ namespace GameOfLife
         public void StartGame()
         {
             gameViewer.PrintGameIntro();
-            gameViewer.PrintGameOptions();
-
+            GameMenu command = gameViewer.PrintGameOptions();
+                    
             /// User makes choice: to continue, quit or start a new game 
-            int command = int.Parse(Console.ReadLine());
-            switch (command)
+             switch (command)
             {
                 // if "start the game" is pressed  
-                case 1:
+                case GameMenu.NewGame:
                     NewGame();
                     break;
                 // if "continue the game" is pressed  
-                case 2:
+                case GameMenu.ContinueGame:
                     ContinueGame();
                     break;
                 //if "save the game" is pressed  
-                case 3:
+                case GameMenu.SaveGame:
                     gameFileSaver.SaveGames(games);
                     PauseGame();
                     break;
                 //if "quit the game" is pressed  
-                case 4:
+                case GameMenu.Exit:
                    Environment.Exit(0);
                     break;
                 // if unknown command is pressed  

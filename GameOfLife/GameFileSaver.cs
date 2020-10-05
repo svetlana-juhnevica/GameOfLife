@@ -38,9 +38,9 @@ namespace GameOfLife
             }
         }
         /// <summary>
-        /// 
+        /// Saves all games to the file
         /// </summary>
-        /// <param name="gameModel"></param>
+        /// <param name="games">List of games</param>
         public void SaveGames(List<Game> games)
         {
             try
@@ -54,7 +54,11 @@ namespace GameOfLife
             }
         }
 
-         public List<Game> LoadGames()
+        /// <summary>
+        /// Loads all games from the file
+        /// </summary>
+        /// <param name="games">List of games</param>
+        public List<Game> LoadGames()
          {
               try
               {

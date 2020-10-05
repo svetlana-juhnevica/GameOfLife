@@ -40,12 +40,31 @@ namespace GameOfLife
         /// <summary>
         /// Options to choose whether to start a new game, continue the game or quit
         /// </summary>
-        public void PrintGameOptions()
+        public GameMenu PrintGameOptions()
         {
-            Console.WriteLine("To start a new game, press 1: ");
-            Console.WriteLine("To load the previous game, press 2 : ");
-            Console.WriteLine("To save the game, press 3 : ");
-            Console.WriteLine("To quit the game, press 4 : ");
+            while (true)
+            {
+                Console.WriteLine("To start a new game, press 1: ");
+                Console.WriteLine("To load the previous game, press 2 : ");
+                Console.WriteLine("To save the game, press 3 : ");
+                Console.WriteLine("To quit the game, press 4 : ");
+
+                var option = Console.ReadLine();
+                switch (option)
+                {
+                    case "1":
+                        return GameMenu.NewGame;
+                    case "2":
+                        return GameMenu.ContinueGame;
+                    case "3":
+                        return GameMenu.SaveGame;
+                    case "4":
+                        return GameMenu.Exit;
+                    default:
+                        WarningOfWrongCommand();
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -193,11 +212,13 @@ namespace GameOfLife
         /// <summary>
         /// Displays all selected games 
         /// </summary>
-        /// <param name="games"></param>
-        /// <param name="selectedGamesId"></param>
-        public void PrintGames(List<Game> games, List<int> selectedGamesId, int aliveGamesCount, int totalAliveCellsCount)
+        /// <param name="games">List of generated games</param>
+        /// <param name="selectedGamesNumber">List of games for displaying</param>
+        /// <param name="aliveGamesCount">NUmber of alive games</param>
+        /// <param name="totalAliveCellsCount">All alive cells in the game</param>
+        public void PrintGames(List<Game> games, List<int> selectedGamesNumber, int aliveGamesCount, int totalAliveCellsCount)
         {
-            foreach (int index in selectedGamesId)
+            foreach (int index in selectedGamesNumber)
             {
                 Console.WriteLine("Game: {0}", index);
                 Game game = games[index - 1];
