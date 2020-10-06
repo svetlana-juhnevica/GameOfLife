@@ -190,8 +190,6 @@ namespace GameOfLife
             }
             Console.BackgroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
-            // Console.SetCursorPosition(0, 0);
-            // Console.Clear();
             Console.Write(stringBuilder.ToString());
             Console.WriteLine("Generations: {0}", game.GenerationCount);
             Console.WriteLine("Alive cells: {0}", game.AliveCellsCount);

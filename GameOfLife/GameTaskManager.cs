@@ -151,6 +151,7 @@ namespace GameOfLife
                     break;
             }
         }
+
         /// <summary> 
         /// Continues previous game after pause. 
         /// </summary> 

@@ -13,32 +13,27 @@ namespace GameOfLife
         /// <summary>
         /// Number of rows in the grid
         /// </summary>
-        public int Rows;
+        public int Rows { get; set; }
 
         /// <summary>
         /// Number of columns in the grid
         /// </summary>
-        public int Columns;
+        public int Columns { get; set; }
 
         /// <summary>
         /// The grid with dead and alive cells
         /// </summary>
-        public CellStatus[,] Grid;
+        public CellStatus[,] Grid { get; set; }
 
         /// <summary>
         /// Number of generations in the game
         /// </summary>
-        public int GenerationCount;
+        public int GenerationCount { get; set; }
 
         /// <summary>
         /// Number of alive cells in the grid
         /// </summary>
-        public int AliveCellsCount;
-
-        /// <summary>
-        /// List of generated games
-        /// </summary>
-        public List<Game> games;
+        public int AliveCellsCount { get; set; }
 
         /// <summary>
         /// Status of the game according to the changing cells in its grid
