@@ -9,9 +9,13 @@ namespace GameOfLife
     /// </summary>
     public class GameTaskManager
     {
-        private GameViewer gameViewer = new GameViewer();
+        private IGameViewer gameViewer;
         private GameFileSaver gameFileSaver = new GameFileSaver();
-        private List<Game> games = new List<Game>();
+
+        /// <summary>
+        /// List of generated games
+        /// </summary>
+        public List<Game> Games = new List<Game>();
         private List<int> selectedGamesNumber = new List<int>();
         private Timer timer;
         /// <summary> 
@@ -39,6 +43,10 @@ namespace GameOfLife
         /// </summary>
         public int displayedGamesCount;
        
+        public GameTaskManager(IGameViewer gameViewer)
+        {
+            this.gameViewer = gameViewer;
+        }
         /// <summary> 
         /// Run game. 
         /// </summary> 
@@ -76,7 +84,7 @@ namespace GameOfLife
                     break;
                 //if "save the game" is pressed  
                 case GameMenu.SaveGame:
-                    gameFileSaver.SaveGames(games);
+                    gameFileSaver.SaveGames(Games);
                     PauseGame();
                     break;
                 //if "quit the game" is pressed  
@@ -133,7 +141,7 @@ namespace GameOfLife
                     break;
                 //if "save" is pressed  
                 case PausedGameMenu.SaveGame:
-                    gameFileSaver.SaveGames(games);
+                    gameFileSaver.SaveGames(Games);
                     PauseGame();
                     break;
                 //if "continue saved game" is pressed  
@@ -181,7 +189,7 @@ namespace GameOfLife
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             CalculateGamesNewCellStatus();
-            gameViewer.PrintGames(games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
+            gameViewer.PrintGames(Games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
         }
 
         /// <summary> 
@@ -212,7 +220,7 @@ namespace GameOfLife
             {
                 Game game = new Game(rows, columns);
                 game.Randomize();
-                games.Add(game);
+                Games.Add(game);
                 totalAliveCellsCount += game.AliveCellsCount;
             }
         }
@@ -224,7 +232,7 @@ namespace GameOfLife
         {
             totalAliveCellsCount = 0;
             aliveGamesCount = 0;
-            foreach (Game game in games)
+            foreach (Game game in Games)
             {
                 game.CalculateNewCellStatus();
                 totalAliveCellsCount += game.AliveCellsCount;
@@ -240,8 +248,9 @@ namespace GameOfLife
         /// </summary>
         private void GamesForDisplaying()
         {
-            displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
-            for (int i = 0; i < displayedGamesCount; i++)
+            //  displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
+            //  for (int i = 0; i < displayedGamesCount; i++)
+            for (int i = 0; i < 8; i++)
             {
                 int number = gameViewer.AskForGamesToDisplay();
                 selectedGamesNumber.Add(number);

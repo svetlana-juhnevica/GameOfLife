@@ -7,7 +7,7 @@ namespace GameOfLife
     /// <summary> 
     /// Class for displaying on the console. 
     /// </summary> 
-    public class GameViewer
+    public class GameViewer : IGameViewer
     {
         /// <summary> 
         /// Establish an event handler to process key press events.

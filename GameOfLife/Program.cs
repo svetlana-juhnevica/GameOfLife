@@ -6,7 +6,7 @@ namespace GameOfLife
     {
         public static void Main(string[] args)
         {
-            GameTaskManager gameTaskManager = new GameTaskManager();
+            GameTaskManager gameTaskManager = new GameTaskManager(new GameViewer());
             gameTaskManager.Run();
 
             Console.ReadKey();
