@@ -16,7 +16,11 @@ namespace GameOfLife
         /// List of generated games
         /// </summary>
         public List<Game> Games = new List<Game>();
-        private List<int> selectedGamesNumber = new List<int>();
+
+        /// <summary>
+        /// List of games selected for displaying
+        /// </summary>
+        public List<int> SelectedGamesNumber = new List<int>();
         private Timer timer;
         /// <summary> 
         /// The status of the game whether the game is running. 
@@ -189,7 +193,7 @@ namespace GameOfLife
         public void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             CalculateGamesNewCellStatus();
-            gameViewer.PrintGames(Games, selectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
+            gameViewer.PrintGames(Games, SelectedGamesNumber, aliveGamesCount, totalAliveCellsCount);
         }
 
         /// <summary> 
@@ -246,14 +250,13 @@ namespace GameOfLife
         /// <summary>
         /// Makes list of games numbers for displaying
         /// </summary>
-        private void GamesForDisplaying()
+        public void GamesForDisplaying()
         {
-            //  displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
-            //  for (int i = 0; i < displayedGamesCount; i++)
-            for (int i = 0; i < 8; i++)
+            displayedGamesCount = gameViewer.AskForDisplayedGamesCount();
+            for (int i = 0; i < displayedGamesCount; i++)
             {
                 int number = gameViewer.AskForGamesToDisplay();
-                selectedGamesNumber.Add(number);
+                SelectedGamesNumber.Add(number);
             }
         }
 
