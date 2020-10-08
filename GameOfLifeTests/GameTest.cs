@@ -29,7 +29,6 @@ namespace GameOfLifeTests
         }
 
 
-
         [Fact]
         public void GamesForDisplaying_IfGamesAreAdded_ListOfGamesFilled()
         {
@@ -44,6 +43,20 @@ namespace GameOfLifeTests
 
             //Assert
             Assert.Equal(2, gameTaskManager.SelectedGamesNumber.Count);
+            Assert.Equal(12, gameTaskManager.SelectedGamesNumber[0]);
+            Assert.Equal(12, gameTaskManager.SelectedGamesNumber[1]);
+        }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(5, 5)]
+        [InlineData(20, 20)]
+        public void GameRowsColumnsGenerationCountTrue(int rows, int cols)
+        {
+            var game = new Game(rows, cols);
+            Assert.Equal(rows, game.Rows);
+            Assert.Equal(cols, game.Columns);
+            Assert.Equal(0, game.GenerationCount);
         }
     }
 }
