@@ -1,8 +1,5 @@
 using GameOfLife;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace GameOfLifeTests
@@ -51,7 +48,7 @@ namespace GameOfLifeTests
         [InlineData(1, 1)]
         [InlineData(5, 5)]
         [InlineData(20, 20)]
-        public void GameRowsColumnsGenerationCountTrue(int rows, int columns)
+        public void GameRowsColumnsGenerationCount_RandomFill_True(int rows, int columns)
         {
            //Arrange
             var game = new Game(rows, columns);
@@ -81,10 +78,10 @@ namespace GameOfLifeTests
             Assert.Equal(rows, game.Rows);
             Assert.Equal(columns, game.Columns);
             Assert.Equal(2, game.GenerationCount);
-        } 
-
+        }
     }
 }
+
 
             
                 

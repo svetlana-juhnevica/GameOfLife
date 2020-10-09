@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace GameOfLife
 {
@@ -58,6 +56,7 @@ namespace GameOfLife
         /// </summary> 
         public void Randomize()
         {
+
             GenerationCount = 0;
             for (var row = 0; row < Rows; row++)
             {
