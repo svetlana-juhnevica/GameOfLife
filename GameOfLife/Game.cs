@@ -58,6 +58,7 @@ namespace GameOfLife
         /// </summary> 
         public void Randomize()
         {
+            GenerationCount = 0;
             for (var row = 0; row < Rows; row++)
             {
                 for (var column = 0; column < Columns; column++)
@@ -69,6 +70,7 @@ namespace GameOfLife
                     }
                 }
             }
+            GenerationCount++;
         }
 
         /// <summary> 
@@ -76,6 +78,7 @@ namespace GameOfLife
         /// </summary> 
         public void CalculateNewCellStatus()
         {
+            GenerationCount = 1;
             IsGameAlive = false;
             AliveCellsCount = 0;
             var nextGeneration = new CellStatus[Rows, Columns];

@@ -51,13 +51,38 @@ namespace GameOfLifeTests
         [InlineData(1, 1)]
         [InlineData(5, 5)]
         [InlineData(20, 20)]
-        public void GameRowsColumnsGenerationCountTrue(int rows, int cols)
+        public void GameRowsColumnsGenerationCountTrue(int rows, int columns)
         {
-            var game = new Game(rows, cols);
+           //Arrange
+            var game = new Game(rows, columns);
+           
+            //Act
+            game.Randomize();
+           
+            //Assert
             Assert.Equal(rows, game.Rows);
-            Assert.Equal(cols, game.Columns);
-            Assert.Equal(0, game.GenerationCount);
+            Assert.Equal(columns, game.Columns);
+            Assert.Equal(1, game.GenerationCount);
         }
+
+         [Theory] 
+         [InlineData(2, 2)] 
+         [InlineData(5, 5)] 
+         [InlineData(20, 20)] 
+        public void CalculateNewCellStatus_GenerationCountAliveCellsCount_True(int rows, int columns)
+        { 
+            //Arrange
+            var game = new Game(rows, columns);
+           
+            //Act
+            game.CalculateNewCellStatus();
+
+            //Assert
+            Assert.Equal(rows, game.Rows);
+            Assert.Equal(columns, game.Columns);
+            Assert.Equal(2, game.GenerationCount);
+        } 
+
     }
 }
 
